@@ -1,0 +1,706 @@
+{
+ "file": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO",
+ "size": 4825690112,
+ "chunks": 116,
+ "chunk_size": 41943040,
+ "file_sha256": "b02e6dba241298824259e5e8a2a7b61a595b6b9d083b95284b3be15112e95150",
+ "parts": [
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0000",
+   "size": 41943040,
+   "sha256": "17666702bc9042eb1f50b5822a301ec313168abff842013f1f7f82e5f9feee85",
+   "blob_sha1": "6ddeca76c1c223f92322214f8cbbb39fb2a1a8f5"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0001",
+   "size": 41943040,
+   "sha256": "c21a3514744b0d54db357d6b6e95ba7f7d81f40a183dcb4a3c4c7fad1b4c2f92",
+   "blob_sha1": "6390a4c67b836e9490770ee43ec673402219d4d1"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0002",
+   "size": 41943040,
+   "sha256": "408ea096706049ffe8a559e9014052c49a439cb0f38cf2f3a09d50b0951ae62e",
+   "blob_sha1": "3dd69588efc4087c2ab6e30715509c22fa81fbaf"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0003",
+   "size": 41943040,
+   "sha256": "7a7316c80ed6c62b6e8ff888e92f5fbe506d9cfdccc21b9a728dd3d818ee2e84",
+   "blob_sha1": "2b7c2e8cf4cc3b2bcc1b0678ed738f5cf8b58b73"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0004",
+   "size": 41943040,
+   "sha256": "83377540e14aa164c21fdcdb04496a65911d3a5d52f66b22a386cc831785c23b",
+   "blob_sha1": "a2963234a68cbdd2bc195938e85cdc2a1603c62b"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0005",
+   "size": 41943040,
+   "sha256": "c2f631dca9dbed5dad4bd0bd97c6491c71047a548ace1fe24977208f4e14e73c",
+   "blob_sha1": "4ab0e2565ac4e26f456e0c867b71148b4b3e8e6c"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0006",
+   "size": 41943040,
+   "sha256": "55c771ac23ea490eb96ae6c4b8040202953735caf941551d0f4cd7713f2286d2",
+   "blob_sha1": "54d07d48252e70cd005da03980c6e3210ac0ef3e"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0007",
+   "size": 41943040,
+   "sha256": "fb937613b428605236381ee97b75cd2b26629808c4afe1a4b2c3c5d75f99a210",
+   "blob_sha1": "02c7c366b2cdbe2a1c1637c920686eb6a67e617c"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0008",
+   "size": 41943040,
+   "sha256": "23179f238f06bfc397ac4afe4f3e859306e0294d484087a079513f56c653b366",
+   "blob_sha1": "832f48cc8bbebabe52db69358d7e0bd731e5513b"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0009",
+   "size": 41943040,
+   "sha256": "d33cc8f6ae364ee11eef05fbfc79f5787dd6b7adcd3d670865e76eea211692e7",
+   "blob_sha1": "8e2d91ee1d08175d7e7b0ac31d5b99e8775eefb6"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0010",
+   "size": 41943040,
+   "sha256": "f6771607cd7d8435acc232fa873f4d2dc893f3d78df6331602e1f6052f5a9b20",
+   "blob_sha1": "e34df77e7055b910b16b4100fe73d2e01d51beeb"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0011",
+   "size": 41943040,
+   "sha256": "7672e9769452113b5da08003ac16e3b0f7413d52b3810bfb19c3aec08a3fa391",
+   "blob_sha1": "82bf62f60a0d6a621faf0ec7a2be50a10601f986"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0012",
+   "size": 41943040,
+   "sha256": "86564e2fdeaf908aae348059c7f0b1c4b2a2a740875d56d257014f4262677164",
+   "blob_sha1": "6a5a226a2dbd069be9e50901f38299cbc201be58"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0013",
+   "size": 41943040,
+   "sha256": "ff9020035e59845d161addf3bb25e45ae64b648cd8902d9574d7150f8b458341",
+   "blob_sha1": "d4cd27ffadf9e964a44b750830b7629612dadd9d"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0014",
+   "size": 41943040,
+   "sha256": "d3354e7178be1492a8f044c3ab00a83ec49ccd3705ebd5fddc1db8a466598585",
+   "blob_sha1": "343bba0ba722e5fcce3d5a3a05c521a13219f427"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0015",
+   "size": 41943040,
+   "sha256": "b03c2fa5ee76645337699688392b2e76b8d9521b74c82fd9d4fda5b7727260d1",
+   "blob_sha1": "a3a190afbc20f19ee5af997dec437b42c7b50d6d"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0016",
+   "size": 41943040,
+   "sha256": "639e92ecd6dd49cbae8bce38bf756c982e8e8087dfc6daca1f270ef901479c3f",
+   "blob_sha1": "33f73eff3d2438fa6b129f8faa8e176b2156cef0"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0017",
+   "size": 41943040,
+   "sha256": "b8c8c9dd9d2fb1f16ac52b3e3177f64f029709e6c60910dba44715b9893c4418",
+   "blob_sha1": "580903e387f9b0595698c70cb7037ff6fc47a0b7"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0018",
+   "size": 41943040,
+   "sha256": "9d937c569eb0917fddd1842ee6f24961871ea018109de83755af64b2c9740d65",
+   "blob_sha1": "af8f01af2ed3b7934829a86a4dc9bb708ff5497c"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0019",
+   "size": 41943040,
+   "sha256": "d032f85341a41e07cf7ec2493d0870c854b11a01cdaafaf7681cc1d4f27e2aba",
+   "blob_sha1": "b2a11f934c19e7dc7aedc18082ed01344062e55a"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0020",
+   "size": 41943040,
+   "sha256": "a52d9fca39905ed994885db6570ceada31b7fb4916fe353cf39aac9893595c1a",
+   "blob_sha1": "95a13212823083769689d1d52c123b2d8666dd53"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0021",
+   "size": 41943040,
+   "sha256": "d85f1723202bfc5879898ed0a87dd571b840b177ec114a538b4417b552ca8c08",
+   "blob_sha1": "0c3cb1fd514070d22020f1528d46e52c96e8d689"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0022",
+   "size": 41943040,
+   "sha256": "05e1022cb36cccbabbfef5b5a700df075c6f81925657917cd9c44c34e20765a1",
+   "blob_sha1": "2f604edf0ba23f7ada5be7ee6b9b8457faf7e2dd"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0023",
+   "size": 41943040,
+   "sha256": "fd89cac1636e4e91bb757cbf0cee9948e29efbc813ad429631a8ea6f8589149a",
+   "blob_sha1": "c475b30919a79a966827c671bd470bf6a48988f3"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0024",
+   "size": 41943040,
+   "sha256": "5d8384dffbbdd7afb06310983b9b00c7067a5b8434e936d2be52f54c50ca9cf5",
+   "blob_sha1": "f0cbd344133b5b31789c4673cd0baae2684160ec"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0025",
+   "size": 41943040,
+   "sha256": "ca84aaaf84f24b046e5f54f1fa1ab3979d631e573f298c692c1e7e9b1df18866",
+   "blob_sha1": "c3962b913f46c252d34b8f823e9742132bbc63e4"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0026",
+   "size": 41943040,
+   "sha256": "f074afa80a63163774b13a60bc581971a041b2e0f20d52d38ca0eef3c9867ea7",
+   "blob_sha1": "7cefeac4ce01028b55736d81ef38ce4e34b6f4db"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0027",
+   "size": 41943040,
+   "sha256": "d381925ea8cf8a2549306cfad70fe9f172222d4bae762b28d1578ec00b5d2dc5",
+   "blob_sha1": "8608cff6f8c5c61ba46e2a30531564452a33dd70"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0028",
+   "size": 41943040,
+   "sha256": "b2e3eae565629f1a5bf155772c49f431198f203e2c558472a01664246d150fa1",
+   "blob_sha1": "df1933809a7e5e3596d342e952f08aa346079e89"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0029",
+   "size": 41943040,
+   "sha256": "aea2e801e4f7a407f9ac4a7aa9941a610d0a555b21f489d975122662958647ce",
+   "blob_sha1": "4b238172da31714e5793f83aa4176db0a03d72be"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0030",
+   "size": 41943040,
+   "sha256": "f47928f143247e2cbfee483208a3f86628167faba08512f2482aa60ead2fe344",
+   "blob_sha1": "e74d9469f2c3e69ac2ea3e01430887ec62edf08c"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0031",
+   "size": 41943040,
+   "sha256": "d7abcf03d001685eaaf655278603be0d2bc4a3958f6fbfab1bf50310f68b7d0a",
+   "blob_sha1": "778e16ce3cbeb9d926274c384774e35a108de385"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0032",
+   "size": 41943040,
+   "sha256": "eb8ea64d25a6417488b7a23e86d9471c38d53a65ca817232d57e5d93a1dd585f",
+   "blob_sha1": "12b0089c7222e94cfd6696a424212c5318427f12"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0033",
+   "size": 41943040,
+   "sha256": "fd262db48948beabdabbfd69fa7d11df2e20b5e0174bcae405dd23ae51510ca1",
+   "blob_sha1": "6211d841e08fde97a223d23f692244c6e6d81f91"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0034",
+   "size": 41943040,
+   "sha256": "0231fc3095da1c11080ba66ba2b8fbd41130bb32bf45d6dbfa10b0f7d8a24769",
+   "blob_sha1": "6b639950938ad246d8dad39f684a601818aee72c"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0035",
+   "size": 41943040,
+   "sha256": "d7291cdc22a0a0e3d94a6bcad82632166daf03666c5945c68ed9a94273da3411",
+   "blob_sha1": "a3ba680e8651d09448400f9aeb1cdd9eab420f8d"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0036",
+   "size": 41943040,
+   "sha256": "4eac7f17a3b53ebd8a39de87b229aa705b51ed8ea41d98fc14aa23811e3276fe",
+   "blob_sha1": "7065c641d1229c6e2d8dc8326e370f670ff7ab0b"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0037",
+   "size": 41943040,
+   "sha256": "f8891cd7a2c9a31341f6191ae1b575be609ec4291aef5dcedf59ee059c8e974a",
+   "blob_sha1": "ed8eee46464cf4d0f6cd6d5ca16b73ff4a600932"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0038",
+   "size": 41943040,
+   "sha256": "832e0e6e70fd57c34374cdb4da8487cfd0e67c61cfe882afc8f118798ba44e4f",
+   "blob_sha1": "b4c3f82fdeb7a8ccbfbc60aa5fea551eb41da344"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0039",
+   "size": 41943040,
+   "sha256": "91af41e3b433147ca5ec28d0e964ad9f4c7a95f190f6cd0f44a936043d96acd7",
+   "blob_sha1": "037e7ebab4d007721fe42d318e828c9c2abeb905"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0040",
+   "size": 41943040,
+   "sha256": "f505f74d145d65c1573dff317439620e91c32a19f18a22a00cc0a6bec3829de7",
+   "blob_sha1": "48c16bbe8fc177c6bfce48616d6755fb4bc3e539"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0041",
+   "size": 41943040,
+   "sha256": "6d71f89a7e0a15235e5a1aefd305ee4aeaf01265b4535a211e1f7cf24cbca652",
+   "blob_sha1": "60b6f29ffc05e031fecbd9fded10c2b8a27bdf98"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0042",
+   "size": 41943040,
+   "sha256": "60d01bec7c2eb00384c7cd328022a87bdd72563fff11c00e5f23a65a20c5ea98",
+   "blob_sha1": "9413fbea2bc5a48d148418c566fa97ac805a4c1b"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0043",
+   "size": 41943040,
+   "sha256": "c191026f0abd90711f01ca1dd324c9bda8ca2aa011f9c4158a66ed04c9793849",
+   "blob_sha1": "04ff03d7b54335c2d09fcd6de1a2ab1063475462"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0044",
+   "size": 41943040,
+   "sha256": "95286d8351f393500fe3e56a62de59547ce5f4b34f98373084722da946108d5f",
+   "blob_sha1": "5ae77b7932bb325389ee024f52c663fc4c1f05dc"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0045",
+   "size": 41943040,
+   "sha256": "397435101cc4f5eb89999704ce35ab0f97ae4d2974fcf7610aaa1cf9ae3d066f",
+   "blob_sha1": "43613c0c047451b2b00743bb2e8ee13a728a0e8d"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0046",
+   "size": 41943040,
+   "sha256": "c57664bbcdf12bc778f73a6d0260191dba3687916f17bd3c68f731b51b468b9f",
+   "blob_sha1": "90e6c44972aabe1f2c6f777a8572af87f7b4a050"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0047",
+   "size": 41943040,
+   "sha256": "1aa9f1df26925e1c9ead33f2414a9db39d5f8771920208e5d133a92d5bb40506",
+   "blob_sha1": "732db4274e126a6d96e460b6d3e0a9682a5d3b03"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0048",
+   "size": 41943040,
+   "sha256": "29804d5280d66e74a77ccf685de5107d81d15b25a66dd01268b2a96cdf99dfe8",
+   "blob_sha1": "4f19c9ff8e331903abdd69f68e32fd6ae5e13edd"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0049",
+   "size": 41943040,
+   "sha256": "fb8ac8e5e098305e680e8fe0b5a856c9d3b9e190923b026835b15a2fb99a24be",
+   "blob_sha1": "c3dcb3c35c2c416ad1f4683ecc11164f8865e06f"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0050",
+   "size": 41943040,
+   "sha256": "9771a0937b3c5242ae2d7e15693de4d9c940a9b34abd877fb7944a50bcd0b3c6",
+   "blob_sha1": "80d510ebb2099ef323d53430f8dbb2b1a7e957b6"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0051",
+   "size": 41943040,
+   "sha256": "e1348e53656241b64a263532102cfb7462bf0033882d56bad922f74db6a57d7b",
+   "blob_sha1": "998727c34e0a1704430b75030ae1a2440a644b5b"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0052",
+   "size": 41943040,
+   "sha256": "ec878f26c5e08310b1e523bfcde78a57d0de5985a916430602a0fd1ac0b54d46",
+   "blob_sha1": "64f56c574a3f1d9d206a35256a5ea8207eef624f"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0053",
+   "size": 41943040,
+   "sha256": "8628ee511e22790e2d17d7752f4bd4277c9f7f5685140ee8e31413ad6b8ac660",
+   "blob_sha1": "d41af17ff97fd980c13dbd8473a0e70317c90c7f"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0054",
+   "size": 41943040,
+   "sha256": "6acbbfc58dd96f85ea53e6f47a6e35d16a881c6b9f1ac82adb94201e4113236a",
+   "blob_sha1": "60576a7a2f707c44dd3007930b810e7ffd3f8863"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0055",
+   "size": 41943040,
+   "sha256": "b5cf05d7de2d7990c694a11f94cf0c5a2de0e1acf51d392a5c33da85be193c8a",
+   "blob_sha1": "57daaf49bcf05efd4db3c8b6e9a3a1c04332ee88"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0056",
+   "size": 41943040,
+   "sha256": "985ea7bdbc945a2c4d11eff96f3e6ed82cb77386096e36b9367392d441af2dfa",
+   "blob_sha1": "f3ef276abd9d3418395d9f641720f96d40d822b7"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0057",
+   "size": 41943040,
+   "sha256": "e5c1145cb10081b62851c27236468f3ade7bc03f43bfec4cdce778a7799fbaa1",
+   "blob_sha1": "231176f9472f0639c8428325b5c8345306a5b60a"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0058",
+   "size": 41943040,
+   "sha256": "4687756710fbe34f2906e48206e085704fc53e44594adbdfd2d5e15635ee1b4c",
+   "blob_sha1": "91ea91bf5f3f0ea57c793066a45f7aed6c960620"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0059",
+   "size": 41943040,
+   "sha256": "2a03d3aafca421d8ba9b21b6630f2ae18f63830989c0b47ab7bdfc4acb7d64d4",
+   "blob_sha1": "09b9639af1f83be46ceea9139c2eaa01aa4d9b69"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0060",
+   "size": 41943040,
+   "sha256": "ed9bfb9ebe1c8136c45d8ff7ca3253a97e538a1374dec55cee2829b57e25055a",
+   "blob_sha1": "dde7c3b39067b7d8302da808560c2b7900e79664"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0061",
+   "size": 41943040,
+   "sha256": "8eaffe647c6edbd98aabec5bf908623cb217e346f02114e1441f856f94b3426e",
+   "blob_sha1": "14c1144bcdc0ff02b88cf24d32e35485423c1719"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0062",
+   "size": 41943040,
+   "sha256": "4859cf82b446a7f4affe2088ff79e0f8687b38c3a2de7919c10e880499d63ca7",
+   "blob_sha1": "328d492797b68fae21144aeb834925b3554f1f4c"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0063",
+   "size": 41943040,
+   "sha256": "c981065bb0d246aee885af27c39d6b52a8173774f8d590af415cd41157bf7302",
+   "blob_sha1": "a8ed65aeabe6c3a8b167c229e21f232265bb2f4c"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0064",
+   "size": 41943040,
+   "sha256": "51e49501c55800b35509a8669a91302846cf703b33bfc7b2f2922b8937313311",
+   "blob_sha1": "3c79c5f32f483198e487ae735b91605e847b682e"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0065",
+   "size": 41943040,
+   "sha256": "e6aa877f6ef0f1edb45868ad60f20630a2ce6f03cdc90c215fef1d86040a385e",
+   "blob_sha1": "a8e51fa9a84689eec66e42fe11e5ea4ff0aa35c5"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0066",
+   "size": 41943040,
+   "sha256": "5339037108cccc0d25eb96524ff447063450ae9742a65db92b728ec02e0a4aff",
+   "blob_sha1": "cef09850f6df80072d4327760231948cb47ee79b"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0067",
+   "size": 41943040,
+   "sha256": "fac315e64efd8c33f023579bff633d547d358f62e50fd8bd06a2945c5a0f14d9",
+   "blob_sha1": "b290c7b205b7a8d2bacf8ecd64d27315fd07878f"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0068",
+   "size": 41943040,
+   "sha256": "2cc043cabe4267f7ecd55fb7771807bf6fbc6ec8269908d7fbc83884b362a4f1",
+   "blob_sha1": "8564f979d7b8501830aa315e2c2075be9755329e"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0069",
+   "size": 41943040,
+   "sha256": "54b2fe8669394cd393da8c1f964f9799e9fe94524ac56b28fd3c6a32d0185b9b",
+   "blob_sha1": "fa897d61841f2ac3a84d22d8feece03f378a8089"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0070",
+   "size": 41943040,
+   "sha256": "7797f675df8a6f0b4ce5d13e31740638227ed04bd96bcccdb45557efe19f1794",
+   "blob_sha1": "b52e9c9834e8d02a58b2d33c12265462720e11dd"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0071",
+   "size": 41943040,
+   "sha256": "f606cc1917e22e2e344cb4b72fa2fc012605b104dc54c715684b58b4c4960081",
+   "blob_sha1": "802c316c8846656fa327ef74513655b4efc99cf0"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0072",
+   "size": 41943040,
+   "sha256": "2a2c044a85315f35aec482f67bbc42f608782f74d4822df30855943d1eb4e9e4",
+   "blob_sha1": "ad306718f6b4d0e4259f00246b091b955b2837bc"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0073",
+   "size": 41943040,
+   "sha256": "fae5aa480b6bd27cd897e74ccd34c0de74c31972eb4ee5e71955dc4d1bfab9c5",
+   "blob_sha1": "30a26d2fb2302b09c5b6b9f01d2c15cb5d7ef9f7"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0074",
+   "size": 41943040,
+   "sha256": "0003fd499f31730020349f28a1891c4a77769ef4ab6d13971ee36c9576e5928a",
+   "blob_sha1": "78637c6984b9a3b85ad5cac3ab206b973ff3998b"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0075",
+   "size": 41943040,
+   "sha256": "c9311762db74bc3d9f0730f3df0b912d50742d1c2169d102e93f5241006882e7",
+   "blob_sha1": "f3dadf0017859ea2bbd3f5265d75021888cacf82"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0076",
+   "size": 41943040,
+   "sha256": "3a128cf3b9853d6c9cebde968768b59ead0f00e1b84821f4bb3aec89ea9ebb17",
+   "blob_sha1": "93a03d70f6b9013a35c380e3b841b43e624182ff"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0077",
+   "size": 41943040,
+   "sha256": "7c7f757a8ce36abac6bca11a8f54c1455631c0933a8f211a82965a3afb6aab9e",
+   "blob_sha1": "0e6cfc203c59767929ce2495f72911fdd3e82efa"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0078",
+   "size": 41943040,
+   "sha256": "e361865a601297d5e8ba85d94c010fd603e21c22e936b1d2e3a29b941ff75efd",
+   "blob_sha1": "33871bcae995399ecadab72f0bafc4766ef4f3b3"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0079",
+   "size": 41943040,
+   "sha256": "c850646ba5cf7e56c4bbaf6dc23a6f3d444c7517874147aa58ee2018a2bb9608",
+   "blob_sha1": "6056fc9f91c2bdca214bb9750192e86687149c7f"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0080",
+   "size": 41943040,
+   "sha256": "3103b1957c17f5aa6ac8b4a96e334c9c8a180e370c2bfe36d2366b38d7f4158b",
+   "blob_sha1": "d9df47b6a272fe47d96d2b9db17ef72de6d90f34"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0081",
+   "size": 41943040,
+   "sha256": "99a52889387cee1ea6958e85dc49b94534a784a96739fdd18cf28492cfd77bba",
+   "blob_sha1": "d99020f1d6083fee5a4dd2b00e758331a8a8cb26"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0082",
+   "size": 41943040,
+   "sha256": "ed78a228a0468e35bec2bf671cccd4f19ce0bf4083ae9d12af8e2bc64b2df035",
+   "blob_sha1": "eaad31446d2987ca1d46b09a5ed2d96dfd0ecb57"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0083",
+   "size": 41943040,
+   "sha256": "6fdb181df9d482eea84cd5e0d150ba54f3d71bb04ee71dd519299b88515e8d6f",
+   "blob_sha1": "f53332cf00de153be1be39222854dc563732390e"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0084",
+   "size": 41943040,
+   "sha256": "a0b1724cbb21a7d778376733921fbd189b76c4bb1a4e39d37200b531300b2566",
+   "blob_sha1": "c4fce9335853c54f0758bc2aa04b6216b0a1ccd4"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0085",
+   "size": 41943040,
+   "sha256": "8de2ddfab1506c53eeb041dd7a3d20299f4c38f3c86eb9865244d0b13ffb6d77",
+   "blob_sha1": "7e910b2753a74418ddcd9f3c32385fc79b0fc167"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0086",
+   "size": 41943040,
+   "sha256": "99d8d3fdc0d100f5027a99559750403ae5cfc898f950eef792ce84d44eef7e57",
+   "blob_sha1": "e080e496b6e12284a5e5392fd48c7d762095b716"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0087",
+   "size": 41943040,
+   "sha256": "9f9e287b38fcff89611c75e3f2c6a26489f9fbafaba66a7332dcda155225ace8",
+   "blob_sha1": "18d0cba1aafb1f44dbe84ed7e520fccdc3c70817"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0088",
+   "size": 41943040,
+   "sha256": "fd8e5bd7e86087eb780c1f43bf3f0ecec6ccc7c17e511685c99f889b358a328b",
+   "blob_sha1": "f1eb0d020dd99c85b528a8c6e8b3e5335b6e19c8"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0089",
+   "size": 41943040,
+   "sha256": "ceef672a356548e7d68cad13939eafab12a59967fc4a0e723d98edfa5f77d91c",
+   "blob_sha1": "99fa6b0bc8f2591862fca9b67ce398b418fcb7a8"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0090",
+   "size": 41943040,
+   "sha256": "6505e5e60319272bb17ddbeb032a4035753a85340cc955dcc909a6c2f709ef24",
+   "blob_sha1": "4a5f8fc9173fd111737c11e9ce5e647b4d7e1376"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0091",
+   "size": 41943040,
+   "sha256": "703f3051cd2b1029e2f518fdc2e1e2a26c6f9d5442ee8639922ad9c8db219054",
+   "blob_sha1": "daa4673cb5ffed9c16e32836b479d645e8cfeea6"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0092",
+   "size": 41943040,
+   "sha256": "268be667fb86e76b69b9bcc3cd4b08c8d46c0c29c357d41d3dd3b597c8043e9d",
+   "blob_sha1": "b1f6646cfa2cb293545ea007755aedd7f98c48f1"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0093",
+   "size": 41943040,
+   "sha256": "bf78b95dd2ac4ae8d32462dac4ab066a190a80d987ebc49cda988218a40662dd",
+   "blob_sha1": "5031f88f503abf5b2a3858227f905b894ad0f8c4"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0094",
+   "size": 41943040,
+   "sha256": "5d67b6c4119d50d84d059d2e241cbb956ecc8800b73d57afdb0fdef672513832",
+   "blob_sha1": "88e20dd828176e2d2e86f046c690d886e5ad3725"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0095",
+   "size": 41943040,
+   "sha256": "b61cd8ec838c773df413de794bb732afba560930536cae6b64e5e0fcf4900df1",
+   "blob_sha1": "9c4a8a9bd496cef6b798e33b7ee92c426eb45638"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0096",
+   "size": 41943040,
+   "sha256": "a26acc6c5b8779848a598aebff29db968c21dcaac68b04f63061b26d3d489aad",
+   "blob_sha1": "1eb7db4434a68e6229de143c8e631d0935e6d43f"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0097",
+   "size": 41943040,
+   "sha256": "6169e6957ccb3edb93e4f555db1c2208d9cdfdac6937e3324fdadb7226e59361",
+   "blob_sha1": "a6eab7c499f193a8d42b4a6849178312a97ced92"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0098",
+   "size": 41943040,
+   "sha256": "49b7cbbb0f997608df52ed62daddd07205d315562c9c9d7a978487bb418c9e68",
+   "blob_sha1": "0e97e88ed85ceb9106f54d154a79037356c34865"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0099",
+   "size": 41943040,
+   "sha256": "32e4639a045c519389d8654e06f7b2dfbe0ca874cd6435d38670bd8440b11648",
+   "blob_sha1": "51f97afa92d52f0baf32c5649756f41a0a2ebf27"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0100",
+   "size": 41943040,
+   "sha256": "53b22e332271d6edbcdd5a544c3d4b2d98aacfe524aed3668c684a30d3f940c4",
+   "blob_sha1": "9ba082901ecfd39254d6c7d9b281a62734786ec1"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0101",
+   "size": 41943040,
+   "sha256": "d93127fec7e1897d57b028ebaab07a7efba0b52c5a4587b269b4365ff9497bcc",
+   "blob_sha1": "acf7081407b6c039a580f4613e14004dc12de974"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0102",
+   "size": 41943040,
+   "sha256": "b7f15e1e0c428836c69396544ccec33b0a790396a8fd7589699793846f99e0f4",
+   "blob_sha1": "301c99a2157de0a31540a2e9e67391edd4498717"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0103",
+   "size": 41943040,
+   "sha256": "40e7cf82cce676ea87699760fc0fd9191ecb6abd9d0c3285057c8deb1ab90910",
+   "blob_sha1": "30efcb8a3255defda707711b28187a03feb4058b"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0104",
+   "size": 41943040,
+   "sha256": "91467e9d7a32083bbf82f8036286be54523fb385484f3197ff24f0b4b10efba7",
+   "blob_sha1": "b29be749782bd155b098bf6bbbbc3ac430da4f88"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0105",
+   "size": 41943040,
+   "sha256": "aef0d90a89d7ff67d007f074875ae80bca518aada2bc0586f5954b80163c5b45",
+   "blob_sha1": "e303ab6ca20f1cdbee324c6587a90fa30cf5f7de"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0106",
+   "size": 41943040,
+   "sha256": "48f3d5d6548055f20ab7d0796d07c555173830f49b3533b78b5b3effd40fa2af",
+   "blob_sha1": "f5550adc5ea09b5e276fcbb5f49352ec96648be8"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0107",
+   "size": 41943040,
+   "sha256": "01177fed007355daea0f9c64a62e766cac7e0a9f459b6276a2a684326d9e297b",
+   "blob_sha1": "8ce29146f573d30848ffcdac7aad2dedd19ebb7f"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0108",
+   "size": 41943040,
+   "sha256": "ca30deece11897866fc4d80b1ad019c0dabbbc8c3bff97e77ab3f5f995ccc2d9",
+   "blob_sha1": "68f16488d700487b02196919b867b320f46377ba"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0109",
+   "size": 41943040,
+   "sha256": "68129962aebf32ce71f5cb720623be79077586d5b90247e757e1eced60a8c07f",
+   "blob_sha1": "64921140a2bbbdf0ec9ea122456f666105b49870"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0110",
+   "size": 41943040,
+   "sha256": "6e7a63a91c8820be3be142ee6dacefd3b2ea52c9561cf484dae5888ccda556f8",
+   "blob_sha1": "6dc8b8fdc7ed84dc1f516a91b9017a2db3e756ed"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0111",
+   "size": 41943040,
+   "sha256": "148e408e5098b06621f799ae068ffdf11002903e85b7817f487af43e84c8671b",
+   "blob_sha1": "5b1144e4d8879982a34547de9361d886021fdcc0"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0112",
+   "size": 41943040,
+   "sha256": "7e026147d5ff86715d831cac2d676c85767b365031f205c3825e8d8da040ea2c",
+   "blob_sha1": "b5ca1df9e5c565f81f1cc843d216d6777ec14151"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0113",
+   "size": 41943040,
+   "sha256": "6f8c385469d036df1492f8d3920aee901f10a3dbf5fd2e0fe34ed231a27d6ae8",
+   "blob_sha1": "20d1a66b760ce88482ac84c75c4f4c4021cfef31"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0114",
+   "size": 41943040,
+   "sha256": "9f78f109467fd63254ec587448c43ccc154b8f254dd3bff2d325c21208b53cbd",
+   "blob_sha1": "bb9542ad65721829f82cc5fa800887ce5af101e6"
+  },
+  {
+   "name": "26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO.part0115",
+   "size": 2240512,
+   "sha256": "185ac91911321219a77c009477553acea814ef866334b22ddd81e80df92066cb",
+   "blob_sha1": "da4c20209acc734c3698e857b929f9d7f60b804e"
+  }
+ ],
+ "repo_dir": "artifacts/iso_26100.1_pro_ru_v2"
+}

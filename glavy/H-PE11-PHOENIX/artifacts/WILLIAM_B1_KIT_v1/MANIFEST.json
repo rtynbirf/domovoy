@@ -1,0 +1,15 @@
+{
+ "file": "WILLIAM_B1_KIT_v1.zip",
+ "size": 4563832,
+ "chunks": 1,
+ "chunk_size": 41943040,
+ "file_sha256": "10a9e8424d4147507af62e006deb353fd6d06408cebf8fae19d955542110f722",
+ "parts": [
+  {
+   "name": "WILLIAM_B1_KIT_v1.zip.part0000",
+   "size": 4563832,
+   "sha256": "10a9e8424d4147507af62e006deb353fd6d06408cebf8fae19d955542110f722",
+   "blob_sha1": "0a40acbec4af2de4c7189f7454d7402753e1cc1b"
+  }
+ ]
+}

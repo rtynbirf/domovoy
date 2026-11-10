@@ -1,0 +1,589 @@
+{
+  "Version": 1,
+  "Playbook": {
+    "Id": "f8d17541180d58ec8740ce8e2ebcc0b4",
+    "Name": "PHX-OPTIMAL TUNING (i3-2120 / 8GB / HD2000 / HDD)",
+    "Description": "Оптимум под станцию 6orman: Win11 Home 28000.1836, HDD Seagate 1TB (без SSD). Планировщик, svchost, сеть, HD 2000, GameDVR, виджеты, приватность, AI 26H2, обновления, BSOD. После запуска - ОДНА перезагрузка. Все значения бэкапятся TweakHub.",
+    "Steps": [
+      {
+        "Id": "8c95b62c7d945186a05e7b53ec61017e",
+        "Type": 0,
+        "ReferenceId": "builtin:cpu_priority_separation",
+        "Name": "Планировщик CPU: форграунд (0x26)",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "cb69945ffdfc572aa4970ea282ac859e",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_telemetry",
+        "Name": "Телеметрия: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "4ab156bf41675906bb216d906ac89763",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_activity_history",
+        "Name": "Журнал действий: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "6478ebd687b853d0b5df7a769c5451fc",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_advertising_id",
+        "Name": "Рекламный ID: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "2cee0911286753258175ee4cae59280b",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_tailored_experiences",
+        "Name": "Персонализированные опыты: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "9d10c213eb85547c969c2037ab2ca049",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_consumer_content",
+        "Name": "Потребительский контент/промо: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "89bee28272a45b569cfb7aa94e71ac26",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_bing_search",
+        "Name": "Bing в поиске Пуска: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "07d53b06eacd59adab5b1e812afd39d7",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_fullscreen_optimizations",
+        "Name": "Оптимизация во весь экран: отключить (HD 2000)",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "830245c48c7552ca8da14adc294451f8",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_game_bar",
+        "Name": "Xbox Game Bar: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "217aeaad9e7954dca5d2a45a7c94e920",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_animations",
+        "Name": "Анимации Windows: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "d0b5ecb069645d4589b2f390d3c495e7",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_transparency",
+        "Name": "Прозрачность: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "7c0b7658e83c5241bea8f145e046f74a",
+        "Type": 0,
+        "ReferenceId": "builtin:optimize_visual_effects",
+        "Name": "Визуальные эффекты: производительность",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "9787a25608365380ab902c4dbd6645d8",
+        "Type": 0,
+        "ReferenceId": "builtin:reduce_menu_delay",
+        "Name": "Задержка меню: 0 мс",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "1aca5f59affe51318b827b067c5e608b",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_startup_delay",
+        "Name": "Задержка автозапуска: убрать",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "c8dba7ad2c39534da539d5b2bd00f55c",
+        "Type": 0,
+        "ReferenceId": "builtin:limit_background_updates",
+        "Name": "Фоновые загрузки WU: не более 30%",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "bebe2ee275e456da9a41785b15b8e7fb",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_automatic_driver_updates",
+        "Name": "Драйверы из Windows Update: исключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "98f7e11b80b05d288c2964b1ace2ec49",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_device_coinstallers",
+        "Name": "Со-установщики устройств: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "f8862ff9e67b54389fdbd40475443e1e",
+        "Type": 0,
+        "ReferenceId": "builtin:prevent_device_metadata",
+        "Name": "Метаданные устройств: не загружать",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "aa2bd15c308e552e9ca9d6ec7af550c2",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_wpbt",
+        "Name": "WPBT прошивки: запретить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "c71b3a94444f5a0691ead5ec24d454a4",
+        "Type": 0,
+        "ReferenceId": "builtin:detailed_bsod",
+        "Name": "BSOD: подробные параметры сбоя",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "60e719f29ba358f6841d584eb8c73ff1",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_fast_startup",
+        "Name": "Быстрый запуск: отключить",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "1b0bd39a057f50dca26b7ee0c91aa418",
+        "Type": 0,
+        "ReferenceId": "builtin:disable_windows_ai_policies",
+        "Name": "Страница AI-компонентов: скрыть",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "d4d9d311f0145a31ad20c5b953eec4c7",
+        "Type": 0,
+        "ReferenceId": "custom:698c7d898f8651a3b4f3cccde4cd45f0",
+        "Name": "Диагностика: служба DiagTrack off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "6689d5fb24fb502eaf32441854de5c20",
+        "Type": 0,
+        "ReferenceId": "custom:06b2a46e0b4b5d0bbf285e0f7a9b6dc4",
+        "Name": "Телеметрия: dmwappushservice off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "cbb8f18be3d7597eadb2973edd32574c",
+        "Type": 0,
+        "ReferenceId": "custom:2ceba3b71e67516f9d9beda2d64b973f",
+        "Name": "Отчёты об ошибках: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "1daacfc1e08155bca3f9c4268e03a2bf",
+        "Type": 0,
+        "ReferenceId": "custom:c0b6d5abe9ea56d0a0dfb23ede7dae13",
+        "Name": "svchost-сплит: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "b481ef6accf5548bb810956e2058da4d",
+        "Type": 0,
+        "ReferenceId": "custom:884141e16af15075bf0498b3bb408c33",
+        "Name": "MMCSS: SystemResponsiveness=10",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "527b1640554e5f09934825e30c42e8be",
+        "Type": 0,
+        "ReferenceId": "custom:256a0d829b4f53beb157f9557b7b491a",
+        "Name": "Сетевое троттлинг: снято",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "28daebb3fd1c53a28814b75de98ee662",
+        "Type": 0,
+        "ReferenceId": "custom:9686894f9ce058238c2a91433a5e21fb",
+        "Name": "GameDVR: GameDVR_Enabled=0",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "986f9427c38e5086b637afce48891c5d",
+        "Type": 0,
+        "ReferenceId": "custom:5da75588f36a5b1cb619c1d461ad334c",
+        "Name": "GameDVR: AppCaptureEnabled=0",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "e869a630fa58546888960ca613fb5035",
+        "Type": 0,
+        "ReferenceId": "custom:9812b0305c3f5acea24d88e28ec961f4",
+        "Name": "GameDVR: политика off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "9f1942dd7c675748b5f7745ec287f25c",
+        "Type": 0,
+        "ReferenceId": "custom:520dd1076651571c97144ef3c05f716f",
+        "Name": "Тихие установки Store-приложений: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "f7af187d77695bf59d777a25f31b0fb7",
+        "Type": 0,
+        "ReferenceId": "custom:4932b36944d453b497418a416d152bf1",
+        "Name": "Советы в Пуске: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "f80160c0d064552e871069abc9c136af",
+        "Type": 0,
+        "ReferenceId": "custom:7fb47f1762b051cba2578c7c6f6533e2",
+        "Name": "Промо Пуска: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "351850abcb205680b95c740a8d46d9c0",
+        "Type": 0,
+        "ReferenceId": "custom:4d5bd000a8b15884ae71b191227f8234",
+        "Name": "Промо тайла Finishing setup: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "ab1743d03512591886dba80c660fba57",
+        "Type": 0,
+        "ReferenceId": "custom:41d08f03ce1c53b2a820529e182c0e4b",
+        "Name": "Copilot: выключить политикой",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "82afea73885557518508e4868cbf789d",
+        "Type": 0,
+        "ReferenceId": "custom:bd2756500091558abc7bc916d09c3b8a",
+        "Name": "Кнопка Copilot на панели: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "3efea71979b75ce1be7badfb081b54ac",
+        "Type": 0,
+        "ReferenceId": "custom:57860beda6d3566aabe518b40ff2ccc4",
+        "Name": "Recall/AI-анализ: off (HKCU)",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "783138dad1eb515699636037afabb585",
+        "Type": 0,
+        "ReferenceId": "custom:67c09a08d6df5e588771806e05d37f99",
+        "Name": "Recall: включение запрещено",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "0df5630c4da250ce927fb264c3291eae",
+        "Type": 0,
+        "ReferenceId": "custom:5f70c0fd36b25b5da388569607596c64",
+        "Name": "Click To Do: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "c450ccf032c2532a9f415eb14faf3e0d",
+        "Type": 0,
+        "ReferenceId": "custom:b1e7d1399939562785c5da5efc71581b",
+        "Name": "WU: не перезагружать под юзером",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "cae52fb41b6753d9a09ab523e6a4a203",
+        "Type": 0,
+        "ReferenceId": "custom:7c9100b602b75cceb07b3847885d2e38",
+        "Name": "Виджеты панели задач: off",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "053092c2f2f45da2bacfc0856769ee61",
+        "Type": 0,
+        "ReferenceId": "custom:50323392b0b9553b86de5af4fcebeb4a",
+        "Name": "Flip Model презентация: on",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      }
+    ]
+  },
+  "CustomTweaks": [
+    {
+      "Id": "698c7d898f8651a3b4f3cccde4cd45f0",
+      "Name": "Диагностика: служба DiagTrack off",
+      "Description": "Телеметрия Connected User Experiences: тип запуска 4 (отключена)",
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\DiagTrack",
+      "RegistryKey": "Start",
+      "ValueType": "REG_DWORD",
+      "Data": "4"
+    },
+    {
+      "Id": "06b2a46e0b4b5d0bbf285e0f7a9b6dc4",
+      "Name": "Телеметрия: dmwappushservice off",
+      "Description": "Служба push-канала WAP: тип запуска 4 (отключена)",
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\dmwappushservice",
+      "RegistryKey": "Start",
+      "ValueType": "REG_DWORD",
+      "Data": "4"
+    },
+    {
+      "Id": "2ceba3b71e67516f9d9beda2d64b973f",
+      "Name": "Отчёты об ошибках: off",
+      "Description": "Windows Error Reporting: Disabled=1",
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting",
+      "RegistryKey": "Disabled",
+      "ValueType": "REG_DWORD",
+      "Data": "1"
+    },
+    {
+      "Id": "c0b6d5abe9ea56d0a0dfb23ede7dae13",
+      "Name": "svchost-сплит: off",
+      "Description": "SvcHostSplitThresholdInKB=1073741824: службы в общих процессах, экономия RAM",
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control",
+      "RegistryKey": "SvcHostSplitThresholdInKB",
+      "ValueType": "REG_DWORD",
+      "Data": "1073741824"
+    },
+    {
+      "Id": "884141e16af15075bf0498b3bb408c33",
+      "Name": "MMCSS: SystemResponsiveness=10",
+      "Description": "Резерв под фон: 10% вместо 20% (мягко для десктопа)",
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile",
+      "RegistryKey": "SystemResponsiveness",
+      "ValueType": "REG_DWORD",
+      "Data": "10"
+    },
+    {
+      "Id": "256a0d829b4f53beb157f9557b7b491a",
+      "Name": "Сетевое троттлинг: снято",
+      "Description": "NetworkThrottlingIndex=0xFFFFFFFF (передаётся как -1)",
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile",
+      "RegistryKey": "NetworkThrottlingIndex",
+      "ValueType": "REG_DWORD",
+      "Data": "-1"
+    },
+    {
+      "Id": "9686894f9ce058238c2a91433a5e21fb",
+      "Name": "GameDVR: GameDVR_Enabled=0",
+      "Description": "Запись фона игр: главный выключатель в GameConfigStore",
+      "RegistryPath": "HKEY_CURRENT_USER\\System\\GameConfigStore",
+      "RegistryKey": "GameDVR_Enabled",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "5da75588f36a5b1cb619c1d461ad334c",
+      "Name": "GameDVR: AppCaptureEnabled=0",
+      "Description": "Запись через GameDVR: AppCaptureEnabled=0",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+      "RegistryKey": "AppCaptureEnabled",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "9812b0305c3f5acea24d88e28ec961f4",
+      "Name": "GameDVR: политика off",
+      "Description": "AllowGameDVR=0: GameDVR запрещён политикой",
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR",
+      "RegistryKey": "AllowGameDVR",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "520dd1076651571c97144ef3c05f716f",
+      "Name": "Тихие установки Store-приложений: off",
+      "Description": "ContentDeliveryManager: SilentInstalledAppsEnabled=0",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+      "RegistryKey": "SilentInstalledAppsEnabled",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "4932b36944d453b497418a416d152bf1",
+      "Name": "Советы в Пуске: off",
+      "Description": "ContentDeliveryManager: SystemPaneSuggestionsEnabled=0",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+      "RegistryKey": "SystemPaneSuggestionsEnabled",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "7fb47f1762b051cba2578c7c6f6533e2",
+      "Name": "Промо Пуска: off",
+      "Description": "ContentDeliveryManager: SubscribedContent-338388Enabled=0",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+      "RegistryKey": "SubscribedContent-338388Enabled",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "4d5bd000a8b15884ae71b191227f8234",
+      "Name": "Промо тайла Finishing setup: off",
+      "Description": "ContentDeliveryManager: SubscribedContent-353698Enabled=0",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+      "RegistryKey": "SubscribedContent-353698Enabled",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "41d08f03ce1c53b2a820529e182c0e4b",
+      "Name": "Copilot: выключить политикой",
+      "Description": "TurnOffWindowsCopilot=1",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Policies\\Microsoft\\Windows\\WindowsCopilot",
+      "RegistryKey": "TurnOffWindowsCopilot",
+      "ValueType": "REG_DWORD",
+      "Data": "1"
+    },
+    {
+      "Id": "bd2756500091558abc7bc916d09c3b8a",
+      "Name": "Кнопка Copilot на панели: off",
+      "Description": "Taskbar ShowCopilotButton=0",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "RegistryKey": "ShowCopilotButton",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "57860beda6d3566aabe518b40ff2ccc4",
+      "Name": "Recall/AI-анализ: off (HKCU)",
+      "Description": "DisableAIDataAnalysis=1: анализ данных и Recall запрещены",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Policies\\Microsoft\\Windows\\WindowsAI",
+      "RegistryKey": "DisableAIDataAnalysis",
+      "ValueType": "REG_DWORD",
+      "Data": "1"
+    },
+    {
+      "Id": "67c09a08d6df5e588771806e05d37f99",
+      "Name": "Recall: включение запрещено",
+      "Description": "AllowRecallEnablement=0",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Policies\\Microsoft\\Windows\\WindowsAI",
+      "RegistryKey": "AllowRecallEnablement",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "5f70c0fd36b25b5da388569607596c64",
+      "Name": "Click To Do: off",
+      "Description": "DisableClickToDo=1",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Policies\\Microsoft\\Windows\\WindowsAI",
+      "RegistryKey": "DisableClickToDo",
+      "ValueType": "REG_DWORD",
+      "Data": "1"
+    },
+    {
+      "Id": "b1e7d1399939562785c5da5efc71581b",
+      "Name": "WU: не перезагружать под юзером",
+      "Description": "NoAutoRebootWithLoggedOnUsers=1",
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+      "RegistryKey": "NoAutoRebootWithLoggedOnUsers",
+      "ValueType": "REG_DWORD",
+      "Data": "1"
+    },
+    {
+      "Id": "7c9100b602b75cceb07b3847885d2e38",
+      "Name": "Виджеты панели задач: off",
+      "Description": "TaskbarDa=0 (кнопка Виджеты скрыта)",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "RegistryKey": "TaskbarDa",
+      "ValueType": "REG_DWORD",
+      "Data": "0"
+    },
+    {
+      "Id": "50323392b0b9553b86de5af4fcebeb4a",
+      "Name": "Flip Model презентация: on",
+      "Description": "DirectXUserGlobalSettings=SwapEffectUpgradeEnable=1 (HD 2000: WDDM 1.2 поддерживает flip)",
+      "RegistryPath": "HKEY_CURRENT_USER\\Software\\Microsoft\\DirectX\\UserGpuPreferences",
+      "RegistryKey": "DirectXUserGlobalSettings",
+      "ValueType": "REG_SZ",
+      "Data": "SwapEffectUpgradeEnable=1;"
+    }
+  ],
+  "CustomScripts": []
+}

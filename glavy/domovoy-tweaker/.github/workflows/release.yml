@@ -1,0 +1,576 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# v1.5 (item 8): never cancel a running release.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # v1.5 (item 6b): the release waits for a green CI run of exactly this
+  # commit before packaging anything. The PS 5.1 job is continue-on-error, so
+  # it never blocks the release gate - this poller only requires the main CI
+  # workflow (".github/workflows/ci.yml", the "test" job) to succeed.
+  # v1.6.1 (волна ×9, run 42637523380): workflow_dispatch on main is a
+  # no-op by design - there is no tag ref, no version, no CHANGELOG section,
+  # so the run could only end red ("No green CI run ...", then a changelog
+  # failure). An honest dispatch on a non-tag ref exits 0 immediately.
+  await-tests:
+    # v1.6.1 (волна ×9): релиз — тег-Driven контур; диспатч на ветку = все джобы skipped, ран честно зелёный.
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Await green CI on this commit
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Poll for a successful CI run of exactly this commit
+        run: |
+          set -uo pipefail
+          # Guard: the release pipeline is tag-driven; a dispatch on a branch
+          # ref is a honest no-op, not a red run.
+          case "${GITHUB_REF_NAME}" in
+            v*)
+              echo "tag ref ${GITHUB_REF_NAME} - proceeding with the release gate."
+              ;;
+            *)
+              echo "Ref '${GITHUB_REF_NAME}' is not a v* tag - release only runs on tags; dispatch = no-op (exit 0)."
+              exit 0
+              ;;
+          esac
+          # Poll every 30 s, up to 40 iterations = 20 minutes.
+          for i in $(seq 1 40); do
+            # Superseded duplicates are excluded, not selected: one push of
+            # two refs (main + tag, release run 15) starts two runs of the
+            # same SHA, the concurrency group cancels the loser, and
+            # max_by(.id) over EVERY run used to hand the gate the cancelled
+            # duplicate - refusing a release that a green run of the very
+            # same commit had already earned. Cancelled runs carry no vote;
+            # a real failure still refuses outright.
+            # v1.6.1 (волна ×9): pulse commits carry "[skip ci]" - GitHub never
+            # starts CI for them, so a gate demanding a verdict of exactly
+            # github.sha dead-ends whenever HEAD (or the tagged commit) is a
+            # pulse commit ("No green CI run ... within 20 minutes", run
+            # 42637523380). Honest cure: walk back through commits whose
+            # message carries the repo's own machine-verifiable skip marker
+            # and poll the nearest ancestor that can carry a CI verdict; a red
+            # verdict still refuses outright. A content commit without a
+            # verdict yet stays itself - the 20-minute window waits for it.
+            state=$(gh api "/repos/${{ github.repository }}/actions/runs?head_sha=${{ github.sha }}&per_page=100" \
+              --jq '[.workflow_runs[] | select(.path == ".github/workflows/ci.yml" and .event == "push" and (.conclusion != "cancelled"))] | max_by(.id) | if . == null then "none" else ((.status // "unknown") + "/" + (.conclusion // "pending")) end' \
+              2>/dev/null || echo api-error)
+            if [ "${state}" = "none" ]; then
+              walk="${{ github.sha }}"
+              for k in 1 2 3 4 5; do
+                msg=$(gh api "/repos/${{ github.repository }}/commits/${walk}" --jq '.commit.message' 2>/dev/null || echo '')
+                case "${msg}" in
+                  *"[skip ci]"*)
+                    parent=$(gh api "/repos/${{ github.repository }}/commits/${walk}" --jq '.parents[0].sha' 2>/dev/null || echo '')
+                    if [ -z "${parent}" ]; then break; fi
+                    walk="${parent}"
+                    ;;
+                  *)
+                    break
+                    ;;
+                esac
+              done
+              if [ "${walk}" != "${{ github.sha }}" ]; then
+                state=$(gh api "/repos/${{ github.repository }}/actions/runs?head_sha=${walk}&per_page=100" \
+                  --jq '[.workflow_runs[] | select(.path == ".github/workflows/ci.yml" and .event == "push" and (.conclusion != "cancelled"))] | max_by(.id) | if . == null then "none" else ((.status // "unknown") + "/" + (.conclusion // "pending")) end' \
+                  2>/dev/null || echo api-error)
+                echo "HEAD carries [skip ci] - CI verdict resolved from nearest ancestor ${walk:0:8}: ${state}"
+              fi
+            fi
+            case "${state}" in
+              */success)
+                echo "CI run for ${{ github.sha }} is green - proceeding with the release."
+                exit 0
+                ;;
+              */failure|*/timed_out|*/startup_failure|*/action_required)
+                echo "::error::CI run for ${{ github.sha }} concluded '${state##*/}' - refusing to publish a release on a red commit"
+                exit 1
+                ;;
+              none)
+                echo "No CI run registered for this SHA yet (attempt ${i}/40); sleeping 30 s..."
+                ;;
+              *)
+                echo "CI run state: ${state} (attempt ${i}/40); sleeping 30 s..."
+                ;;
+            esac
+            sleep 30
+          done
+          echo "::error::No green CI run for commit ${{ github.sha }} within 20 minutes - refusing to release untested code"
+          exit 1
+
+  # v1.5.2: the winget portable manifest targets Domovoy/domovoy.exe -
+  # winget-cli accepts ONLY ".exe" for NestedInstallerType portable
+  # (s_AllowedPortableFiletypes in ManifestValidation.cpp; the earlier
+  # domovoy.ps1 target was rejected by the winget-pkgs validation pipeline,
+  # verdict 2026-11-03). The shim is compiled ONCE here from its C# source
+  # (packaging/shim/DomovoyShim.cs) with the .NET Framework csc that ships
+  # on every Windows runner, smoke-tested directly AND through a symlink
+  # (the production winget portable path), and every packaging contour
+  # below ships exactly this artifact - one file everywhere.
+  shim-exe:
+    # v1.6.1 (волна ×9): релиз — тег-Driven контур; диспатч на ветку = все джобы skipped, ран честно зелёный.
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Compile + smoke the portable exe shim (windows-latest)
+    runs-on: windows-latest
+    needs: await-tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Compile DomovoyShim.cs with the .NET Framework csc
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+          if (-not (Test-Path -LiteralPath $csc -PathType Leaf)) { throw "csc.exe not found at $csc" }
+          $stage = Join-Path $env:RUNNER_TEMP 'shim-stage\Domovoy'
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          # The real package layout: the exe and the ps1 shim sit inside
+          # Domovoy/ next to the module itself.
+          Copy-Item -Path 'src/Domovoy/*' -Destination $stage -Recurse
+          Copy-Item -Path 'config','schema' -Destination "$stage/" -Recurse
+          Copy-Item -Path 'packaging/shim/domovoy.ps1' -Destination $stage
+          # Copy the source next to the output and compile from a full
+          # backslash path: csc.exe (CS1504) did not receive the
+          # forward-slash relative path intact from the pwsh native call
+          # (that is exactly how run 65 failed).
+          Copy-Item -Path 'packaging/shim/DomovoyShim.cs' -Destination $stage
+          & $csc /nologo /target:exe /out:"$stage\domovoy.exe" "$stage\DomovoyShim.cs"
+          if ($LASTEXITCODE -ne 0) { throw "csc failed with exit code $LASTEXITCODE" }
+          if (-not (Test-Path -LiteralPath "$stage\domovoy.exe" -PathType Leaf)) { throw 'csc produced no executable' }
+          $sha = (Get-FileHash -LiteralPath "$stage\domovoy.exe" -Algorithm SHA256).Hash
+          Write-Host "domovoy.exe compiled, sha256: $sha"
+          "SHIM_SHA256=$sha" | Add-Content -LiteralPath $env:GITHUB_ENV
+
+      - name: Smoke - run the exe directly (the non-symlink path)
+        shell: pwsh
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP 'shim-stage\Domovoy'
+          $out = & "$stage\domovoy.exe" Get-DomovoyLanguage
+          Write-Host ($out -join "`n")
+          if ($LASTEXITCODE -ne 0) { throw "domovoy.exe returned exit code $LASTEXITCODE" }
+          $joined = ($out -join " ")
+          # Get-DomovoyLanguage prints a Language/Source/PreferenceFile table;
+          # the frozen default is en/default (spec section 10).
+          if ($joined -notmatch 'en\s+default') { throw "unexpected shim output: $joined" }
+
+      - name: Smoke - run the exe through a symlink (the winget portable path)
+        shell: pwsh
+        run: |
+          # winget portable installs symlink the exe into the Links folder.
+          # The shim must find domovoy.ps1 next to the REAL file, not next
+          # to the symlink - that is exactly what this test proves.
+          $ErrorActionPreference = 'Stop'
+          $stage = Join-Path $env:RUNNER_TEMP 'shim-stage\Domovoy'
+          $links = Join-Path $env:RUNNER_TEMP 'links'
+          New-Item -ItemType Directory -Path $links -Force | Out-Null
+          $link = Join-Path $links 'domovoy.exe'
+          New-Item -ItemType SymbolicLink -Path $link -Target "$stage\domovoy.exe" | Out-Null
+          $out = & $link Get-DomovoyLanguage
+          Write-Host ($out -join "`n")
+          if ($LASTEXITCODE -ne 0) { throw "symlinked domovoy.exe returned exit code $LASTEXITCODE" }
+          $joined = ($out -join " ")
+          if ($joined -notmatch 'en\s+default') { throw "unexpected symlinked shim output: $joined" }
+          Write-Host 'Symlink smoke passed: the shim resolved domovoy.ps1 through the link.'
+
+      - name: Upload the compiled shim
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: domovoy-exe
+          path: ${{ runner.temp }}\shim-stage\Domovoy\domovoy.exe
+          retention-days: 7
+
+  # v1.5.3: the single-file portable launcher - Domovoy-<version>-Portable.exe.
+  # One download, one double-click: the exe embeds the whole release payload
+  # (module + catalog + schemas + both shims + README + LICENSE), unpacks it
+  # next to itself (or %LOCALAPPDATA% when that folder is read-only) and
+  # opens the Domovoy GUI; arguments are forwarded verbatim to domovoy.ps1.
+  # Built with the same .NET Framework csc as the winget shim (C#5 source:
+  # packaging/shim/DomovoyPortable.cs), the payload carries the shim-exe
+  # artifact so the "one file everywhere" rule holds for this contour too.
+  # --selftest and an end-to-end Get-DomovoyLanguage run through the exe are
+  # hard gates here, before the release job ever sees the artifact.
+  portable-exe:
+    # v1.6.1 (волна ×9): релиз — тег-Driven контур; диспатч на ветку = все джобы skipped, ран честно зелёный.
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Single-file portable launcher (windows-latest)
+    runs-on: windows-latest
+    needs: [await-tests, shim-exe]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download the compiled shim
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: domovoy-exe
+          path: shim-artifact
+
+      - name: Build Domovoy-<version>-Portable.exe
+        shell: pwsh
+        run: |
+          pwsh -NoProfile -ExecutionPolicy Bypass -File tools/Build-PortableExe.ps1 `
+            -RepoDir . `
+            -ShimExe shim-artifact/domovoy.exe `
+            -OutputDir portable-artifact
+          if ($LASTEXITCODE -ne 0) { throw "portable build failed with exit code $LASTEXITCODE" }
+
+      - name: Smoke - selftest of the portable exe (packaging contract)
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path 'portable-artifact' -Filter 'Domovoy-*-Portable.exe' | Select-Object -First 1
+          if (-not $exe) { throw 'the portable build produced no Domovoy-*-Portable.exe' }
+          & $exe.FullName --selftest
+          if ($LASTEXITCODE -ne 0) { throw "portable selftest failed with exit code $LASTEXITCODE" }
+
+      - name: Smoke - end-to-end launch through the portable exe
+        shell: pwsh
+        run: |
+          # The full production path on a clean runner: extraction next to
+          # the exe, engine discovery, module import from the extracted
+          # payload, one public command, exit code propagation.
+          $exe = Get-ChildItem -Path 'portable-artifact' -Filter 'Domovoy-*-Portable.exe' | Select-Object -First 1
+          $out = & $exe.FullName Get-DomovoyLanguage
+          Write-Host ($out -join "`n")
+          if ($LASTEXITCODE -ne 0) { throw "portable exe returned exit code $LASTEXITCODE" }
+          $joined = ($out -join " ")
+          if ($joined -notmatch 'en\s+default') { throw "unexpected portable output: $joined" }
+          Write-Host 'End-to-end portable smoke passed.'
+
+      - name: Upload the portable exe
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: domovoy-portable
+          path: |
+            portable-artifact/Domovoy-*-Portable.exe
+            portable-artifact/Domovoy-*-Portable.exe.sha256
+          retention-days: 7
+
+  release:
+    # v1.6.1 (волна ×9): релиз — тег-Driven контур; диспатч на ветку = все джобы skipped, ран честно зелёный.
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Package + notes (ubuntu-latest)
+    runs-on: ubuntu-latest
+    needs: [await-tests, shim-exe, portable-exe]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download the compiled shim
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: domovoy-exe
+          path: shim-artifact
+
+      - name: Download the portable exe
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: domovoy-portable
+          path: portable-artifact
+
+      - name: Extract changelog section for the tag
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          export TAG
+          awk 'BEGIN {
+                 esc = ENVIRON["TAG"]; gsub(/[^[:alnum:]_]/, "\\\\&", esc);
+                 pat = "^## \\[" esc "\\]( |$)"
+               }
+               $0 ~ pat { p = 1; next }
+               /^## \[/ { if (p) exit }
+               p' CHANGELOG.md > release_notes.md
+          # v1.5 (item 10): a missing CHANGELOG section is a hard failure, not
+          # a placeholder note - every release must carry real release notes.
+          if [ ! -s release_notes.md ]; then
+            echo "::error::No CHANGELOG section for ${GITHUB_REF_NAME} - refusing to publish a placeholder release"
+            exit 1
+          fi
+          echo '--- release notes ---'
+          cat release_notes.md
+
+      - name: Build the module zip
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          mkdir -p staging
+          cp -r src/Domovoy staging/Domovoy
+          # Ship the feature catalog, profiles, groups and schemas inside the
+          # module itself: the resolver falls back to ModuleBase/config when
+          # there is no repository checkout next to the module.
+          cp -r config schema staging/Domovoy/
+          cp README.md LICENSE staging/
+          # The CLI shims travel inside the package: the winget portable
+          # manifest targets Domovoy/domovoy.exe (v1.5.2, compiled by the
+          # shim-exe job) and domovoy.ps1 forwards to the module. Both
+          # shims must be present - a missing one is a packaging bug.
+          cp packaging/shim/domovoy.ps1 staging/Domovoy/domovoy.ps1
+          cp shim-artifact/domovoy.exe staging/Domovoy/domovoy.exe
+          for f in staging/Domovoy/domovoy.ps1 staging/Domovoy/domovoy.exe; do
+            if [ ! -s "$f" ]; then
+              echo "::error::Packaging bug: $f is missing or empty - the winget portable target would break"
+              exit 1
+            fi
+          done
+          sha256sum staging/Domovoy/domovoy.exe
+          cd staging
+          zip -r "../Domovoy-${VERSION}.zip" .
+          cd ..
+          rm -rf staging
+          SHA256=$(sha256sum "Domovoy-${VERSION}.zip" | cut -d' ' -f1)
+          # v1.5 (item 9): publish the checksum as a release asset in standard
+          # sha256sum format (two spaces between hash and file name).
+          printf '%s  Domovoy-%s.zip\n' "${SHA256}" "${VERSION}" > "Domovoy-${VERSION}.zip.sha256"
+          echo "SHA256=${SHA256}" >> "$GITHUB_ENV"
+          echo "zip sha256: ${SHA256}"
+
+      - name: Generate winget manifests for this version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          python3 packaging/winget/generate.py \
+            --version "${VERSION}" \
+            --sha256 "${SHA256}" \
+            --out "winget-manifests"
+
+      - name: Create GitHub release with assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          FLAG=""
+          case "${GITHUB_REF_NAME}" in
+            v0.*) FLAG="--prerelease" ;;
+          esac
+          zip -j "Domovoy-${VERSION}-winget-manifests.zip" winget-manifests/*
+          # v1.5.3: the single-file portable launcher ships beside the zip.
+          PORTABLE_EXE=$(ls portable-artifact/Domovoy-*-Portable.exe)
+          if [ ! -s "$PORTABLE_EXE" ]; then
+            echo "::error::Packaging bug: the portable exe artifact is missing or empty"
+            exit 1
+          fi
+          PORTABLE_NAME=$(basename "$PORTABLE_EXE")
+          PORTABLE_SHA256=$(sha256sum "$PORTABLE_EXE" | cut -d' ' -f1)
+          printf '%s  %s\n' "${PORTABLE_SHA256}" "${PORTABLE_NAME}" > "${PORTABLE_NAME}.sha256"
+          echo "portable sha256: ${PORTABLE_SHA256}"
+          if gh release view "${GITHUB_REF_NAME}" > /dev/null 2>&1; then
+            echo "::error::Release ${GITHUB_REF_NAME} already exists. Immutable releases are enabled: a published release must not be modified. Delete the release and the tag, then re-push the tag."
+            exit 1
+          fi
+          # v1.7 (hardening 2026-11-10): релиз создаётся как DRAFT одним вызовом
+          # со всеми основными ассетами. Править опубликованный релиз запрещено
+          # immutable releases; джобы sign/updatable-help прикрепляют свои
+          # артефакты к черновику, publish-release публикует его последним.
+          gh release create "${GITHUB_REF_NAME}" \
+            "Domovoy-${VERSION}.zip" \
+            "Domovoy-${VERSION}.zip.sha256" \
+            "Domovoy-${VERSION}-winget-manifests.zip" \
+            "$PORTABLE_EXE" \
+            "${PORTABLE_NAME}.sha256" \
+            --draft \
+            --title "${GITHUB_REF_NAME}" --notes-file release_notes.md $FLAG
+          echo "Draft release ${GITHUB_REF_NAME} created with all core assets (immutable-safe)"
+
+  sign:
+    # v1.6.1 (волна ×9): релиз — тег-Driven контур; диспатч на ветку = все джобы skipped, ран честно зелёный.
+    # v1.7 (hardening 2026-11-10): опциональная джоба — не блокирует publish-release.
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Optional Authenticode signing (windows-latest)
+    runs-on: windows-latest
+    needs: [await-tests, shim-exe, release]
+    continue-on-error: true
+    env:
+      CODE_SIGNING_PFX: ${{ secrets.CODE_SIGNING_PFX }}
+      CODE_SIGNING_PASSWORD: ${{ secrets.CODE_SIGNING_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download the compiled shim
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: domovoy-exe
+          path: shim-artifact
+
+      - name: Sign module files when a certificate is configured
+        shell: pwsh
+        run: |
+          if ([string]::IsNullOrEmpty($env:CODE_SIGNING_PFX)) {
+            Write-Host "CODE_SIGNING_PFX is not configured - the module ships unsigned by design."
+            exit 0
+          }
+          $pfxPath = Join-Path $env:RUNNER_TEMP 'domovoy-codesign.pfx'
+          [IO.File]::WriteAllBytes($pfxPath, [Convert]::FromBase64String($env:CODE_SIGNING_PFX))
+          $cert = Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString $env:CODE_SIGNING_PASSWORD -AsPlainText -Force)
+          Remove-Item $pfxPath -Force
+          Write-Host "Signing with: $($cert.Subject)"
+
+          $timestampUrl = 'http://timestamp.digicert.com'
+          $files = Get-ChildItem -Path 'src/Domovoy' -Recurse -Include *.ps1,*.psm1,*.psd1
+          foreach ($f in $files) {
+            $null = Set-AuthenticodeSignature -FilePath $f.FullName -Certificate $cert -TimestampServer $timestampUrl -HashAlgorithm SHA256
+          }
+
+          $VERSION = $env:GITHUB_REF_NAME.Substring(1)
+          New-Item -ItemType Directory -Path 'staging' -Force | Out-Null
+          Copy-Item -Recurse -Path 'src/Domovoy' -Destination 'staging/Domovoy'
+          Copy-Item -Recurse -Path 'config','schema' -Destination 'staging/Domovoy/'
+          Copy-Item 'README.md','LICENSE' 'staging/'
+          Copy-Item 'packaging/shim/domovoy.ps1' 'staging/Domovoy/domovoy.ps1'
+          Copy-Item 'shim-artifact/domovoy.exe' 'staging/Domovoy/domovoy.exe'
+          if (-not (Test-Path 'staging/Domovoy/domovoy.exe')) { throw 'packaging bug: domovoy.exe missing from the signed zip' }
+          Compress-Archive -Path 'staging/*' -DestinationPath "Domovoy-$VERSION-signed.zip" -Force
+
+      - name: Attach the signed zip to the draft release
+        if: ${{ env.CODE_SIGNING_PFX != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          # v1.7 (hardening 2026-11-10): immutable releases запрещают менять
+          # опубликованный релиз, поэтому артефакт прикладывается к DRAFT
+          # через REST API; publish-release публикует черновик последним.
+          $VERSION = $env:GITHUB_REF_NAME.Substring(1)
+          $tag = $env:GITHUB_REF_NAME
+          $rid = gh api "/repos/$env:GITHUB_REPOSITORY/releases" --jq ".[] | select(.tag_name == \"$tag\" and .draft == true) | .id" | Select-Object -First 1
+          if (-not $rid) { Write-Error "Draft release for $tag not found"; exit 1 }
+          gh api --method POST "/repos/$env:GITHUB_REPOSITORY/releases/$rid/assets?name=Domovoy-$VERSION-signed.zip" --input "Domovoy-$VERSION-signed.zip" -H "Content-Type: application/zip" > $null
+          Write-Host "Signed zip attached to draft $tag."
+
+  publish-psgallery:
+    # v1.6.1 (волна ×9): релиз — тег-Driven контур; диспатч на ветку = все джобы skipped, ран честно зелёный.
+    # v1.7 (hardening 2026-11-10): опциональная джоба — не блокирует publish-release.
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Optional PSGallery publish (windows-latest)
+    runs-on: windows-latest
+    needs: [await-tests, shim-exe, release]
+    continue-on-error: true
+    env:
+      PSGALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download the compiled shim
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: domovoy-exe
+          path: shim-artifact
+
+      - name: Publish to the PowerShell Gallery when the API key is configured
+        shell: pwsh
+        run: |
+          if ([string]::IsNullOrEmpty($env:PSGALLERY_API_KEY)) {
+            Write-Host "PSGALLERY_API_KEY is not configured - skipping the gallery publish."
+            exit 0
+          }
+          # v1.6 (item 1): publish through PSResourceGet (Publish-PSResource),
+          # the successor of the deprecated Publish-Module. PSResourceGet
+          # ships inside pwsh 7.4+; the install line only covers runners
+          # with an older image.
+          if (-not (Get-Command Publish-PSResource -ErrorAction SilentlyContinue)) {
+            Install-Module -Name Microsoft.PowerShell.PSResourceGet -Scope CurrentUser -Force
+          }
+          # The gallery package must carry the feature catalog the same way the
+          # zip does - otherwise an installed module cannot list any features.
+          Copy-Item -Recurse -Path 'config','schema' -Destination 'src/Domovoy/'
+          # Package parity: the CLI shims ship in the zip, so they ship to
+          # the gallery too - the exe shim and its ps1 forwarder together.
+          Copy-Item 'packaging/shim/domovoy.ps1' 'src/Domovoy/domovoy.ps1'
+          Copy-Item 'shim-artifact/domovoy.exe' 'src/Domovoy/domovoy.exe'
+          Import-Module -Name (Join-Path (Get-Location) 'src/Domovoy/Domovoy.psd1') -Force
+          $meta = Test-ModuleManifest -Path (Join-Path (Get-Location) 'src/Domovoy/Domovoy.psd1')
+          Write-Host "Publishing $($meta.Name) $($meta.Version) to the PowerShell Gallery."
+          Publish-PSResource -Path (Join-Path (Get-Location) 'src/Domovoy') -ApiKey $env:PSGALLERY_API_KEY -Repository PSGallery
+          Write-Host "Published. Install-Module -Name Domovoy now serves this release."
+
+  # v1.6 (item 5): updatable help. The cab is generated from the same
+  # comment-based help the CI gate (SYNOPSIS + EXAMPLE) proves complete;
+  # platyPS builds the external help XML, MakeCab packs it and the
+  # HelpInfo XML points at the "latest" release asset so Update-Help
+  # resolves the newest cab. Runs after the release is published and
+  # attaches its artifacts to that release.
+  updatable-help:
+    # v1.6.1 (волна ×9): релиз — тег-Driven контур; диспатч на ветку = все джобы skipped, ран честно зелёный.
+    # v1.7 (hardening 2026-11-10): опциональная джоба — не блокирует publish-release.
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Updatable help cab (windows-latest)
+    runs-on: windows-latest
+    needs: [release]
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Build the external help cab from comment-based help
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Install-Module -Name platyPS -Scope CurrentUser -Force
+          Import-Module platyPS
+          Import-Module -Name (Join-Path (Get-Location) 'src/Domovoy/Domovoy.psd1') -Force
+          $md = Join-Path $env:RUNNER_TEMP 'md'
+          $xml = Join-Path $env:RUNNER_TEMP 'xml'
+          $cab = Join-Path $env:RUNNER_TEMP 'cab'
+          New-Item -ItemType Directory -Path $md,$xml,$cab -Force | Out-Null
+          $null = New-MarkdownHelp -Module Domovoy -OutputFolder $md -WithModulePage -Force
+          $null = New-ExternalHelp -Path $md -OutputPath $xml -Force
+          $landing = Join-Path $md 'Domovoy.md'
+          New-ExternalHelpCab -CabFilesFolder $xml -LandingPagePath $landing -OutputFolder $cab
+          $cabFile = Get-ChildItem -Path $cab -Filter '*.cab' | Select-Object -First 1
+          $helpInfo = Get-ChildItem -Path $cab -Filter '*HelpInfo.xml' | Select-Object -First 1
+          if (-not $cabFile -or -not $helpInfo) { throw "platyPS did not produce the cab or the HelpInfo file" }
+          # Point HelpContentURI at the release-hosted cab so Update-Help
+          # can actually download it.
+          $uri = "https://github.com/rtynbirf/domovoy-tweaker/releases/latest/download/$($cabFile.Name)"
+          [xml]$doc = Get-Content -LiteralPath $helpInfo.FullName -Raw
+          $doc.HelpInfo.HelpContentURI = $uri
+          $doc.Save($helpInfo.FullName)
+          Write-Host "Help cab built: $($cabFile.Name); HelpContentURI = $uri"
+
+      - name: Attach the cab and HelpInfo to the draft release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # v1.7 (hardening 2026-11-10): прикладываем к DRAFT-релизу через REST
+          # (immutable releases запрещают менять опубликованный релиз).
+          $tag = "${{ github.ref_name }}"
+          $rid = gh api "/repos/$env:GITHUB_REPOSITORY/releases" --jq ".[] | select(.tag_name == \"$tag\" and .draft == true) | .id" | Select-Object -First 1
+          if (-not $rid) { Write-Error "Draft release for $tag not found"; exit 1 }
+          $files = @(Get-ChildItem -Path (Join-Path $env:RUNNER_TEMP 'cab') -File | ForEach-Object { $_.FullName })
+          foreach ($f in $files) {
+            gh api --method POST "/repos/$env:GITHUB_REPOSITORY/releases/$rid/assets?name=$([IO.Path]::GetFileName($f))" --input "$f" -H "Content-Type: application/octet-stream" > $null
+          }
+          Write-Host "Attached $($files.Count) help artifact(s) to draft $tag."
+
+  # v1.7 (hardening 2026-11-10): immutable releases требуют паттерн
+  # "draft -> assets -> publish". Публикация только после того, как все
+  # джобы, прикладывающие артефакты, завершились; опциональные джобы выше
+  # continue-on-error, поэтому публикацию не блокируют.
+  publish-release:
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Publish the draft release (immutable-safe)
+    runs-on: ubuntu-latest
+    needs: [release, sign, publish-psgallery, updatable-help]
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Publish the draft
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          RID=$(gh api "/repos/${{ github.repository }}/releases" --jq ".[] | select(.tag_name == \"$TAG\" and .draft == true) | .id" | head -n1)
+          if [ -z "$RID" ]; then
+            echo "::error::Draft release for $TAG not found - the release job must create it."
+            exit 1
+          fi
+          gh api --method PATCH "/repos/${{ github.repository }}/releases/$RID" -f draft=false > /dev/null
+          echo "Release $TAG published - from now on it is immutable."

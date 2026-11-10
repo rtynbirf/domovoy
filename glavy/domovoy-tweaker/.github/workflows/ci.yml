@@ -1,0 +1,534 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    # v1.5 (item 6a): tag pushes also run CI, so release.yml can gate on a
+    # green run of exactly the tagged commit.
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# v1.5 (item 8): one CI run per ref; a superseded push or tag cancels the
+# outdated run instead of queuing behind it.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# The failure-report step pushes a machine-written markdown report to the
+# ci-report branch, so every red run leaves its exact failing tests, error
+# messages and diagnostic matrices readable from a plain clone - no log
+# download or API quota required.
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Lint + Test (windows-latest)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: "PSScriptAnalyzer (gate: Error severity)"
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force
+          # v1.4 (item 3): shared repo-root settings file. The gate stays
+          # Error-only; Warnings are reported but non-blocking; excluded rules
+          # are listed with reasons inside PSScriptAnalyzerSettings.psd1.
+          $results = Invoke-ScriptAnalyzer -Path src -Recurse -Settings PSScriptAnalyzerSettings.psd1
+          foreach ($r in $results) {
+            Write-Host ("{0} {1}:{2} {3}" -f $r.Severity, $r.ScriptName, $r.Line, $r.Message)
+          }
+          $errors = @($results | Where-Object { $_.Severity -eq 'Error' })
+          Write-Host "Analyzer errors: $($errors.Count)"
+          if ($errors.Count -gt 0) { exit 1 }
+          Add-Content -LiteralPath step-trace.txt -Value 'analyzer OK'
+
+      - name: Pester tests
+        shell: pwsh
+        run: |
+          # Pinned exact: Pester 6 changed mock/session-state behaviour; the
+          # suite is written and verified against the 5.x line.
+          Install-Module -Name Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -SkipPublisherCheck
+          Import-Module -Name Pester -RequiredVersion 5.7.1
+          $config = New-PesterConfiguration
+          $config.Run.Path = 'tests'
+          $config.Run.Exit = $false
+          $config.Output.Verbosity = 'Detailed'
+          # v1.5 (item 5): record a real code-coverage baseline and emit NUnit
+          # test results as an artifact.
+          $config.CodeCoverage.Enabled = $true
+          $config.CodeCoverage.Path = 'src/Domovoy/**/*.ps1'
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = 'testResults.xml'
+          # PassThru is required for Invoke-Pester to return the run result
+          # object: without it $result is null and neither the failure loop
+          # nor the coverage block below would ever see real data.
+          $config.Run.PassThru = $true
+          $result = Invoke-Pester -Configuration $config
+          foreach ($test in @($result.Failed)) {
+            foreach ($err in @($test.ErrorRecord)) {
+              $msg = ($err.Exception.Message -replace "`r?`n", ' ')
+              Write-Host ("::error::{0} :: {1}" -f $test.Path, $msg)
+              $summary = "### FAILED: {0}`n`n``````text`n{1}`n{2}`n```````n" -f $test.Path, $msg, ($err.ScriptStackTrace -replace "`r?`n", "`n")
+              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value $summary
+            }
+          }
+          Write-Host ("Tests passed: {0}, failed: {1}" -f $result.PassedCount, $result.FailedCount)
+          # v1.5 (item 5): the coverage baseline is recorded as a fact for
+          # future comparison, not invented and not gated.
+          $cc = $result.CodeCoverage
+          $analyzed = [int]$cc.CommandsAnalyzedCount
+          $executed = [int]$cc.CommandsExecutedCount
+          if ($analyzed -gt 0) {
+            $pct = [math]::Round((100.0 * $executed / $analyzed), 1)
+          }
+          else {
+            $pct = 0
+          }
+          $pctText = $pct.ToString('0.0', [System.Globalization.CultureInfo]::InvariantCulture)
+          $covLine = "Coverage baseline: {0}% (commands {1}/{2}). Threshold is recorded as fact, not invented." -f $pctText, $executed, $analyzed
+          Write-Host $covLine
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value $covLine
+          $failedContainers = @($result.Containers | Where-Object { $_.Status -eq 'Failed' })
+          foreach ($c in $failedContainers) {
+            Write-Host ("::error::CONTAINER FAILED: {0}" -f $c.Path)
+            foreach ($dc in @($c.DiscoveryFailure)) {
+              Write-Host ("::error::discovery: {0}" -f $dc.Message)
+              $dsum = "### CONTAINER FAILED: {0}`n`n``````text`n{1}`n```````n" -f $c.Path, $dc.Message
+              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value $dsum
+            }
+          }
+          # v1.4.1 regression guard, restored: the container block replaced
+          # the exit gate in run 48 and red tests flowed through as green.
+          if ($result.FailedCount -gt 0) { exit 1 }
+          Add-Content -LiteralPath step-trace.txt -Value ('pester OK - passed {0}, failed {1}, containers failed {2}' -f $result.PassedCount, $result.FailedCount, $failedContainers.Count)
+
+      - name: Upload NUnit test results
+        # v1.5 (item 5): upload the NUnit XML even when tests fail, so the
+        # result file can be inspected without re-running the suite.
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-results
+          path: testResults.xml
+          retention-days: 7
+
+      - name: Validate manifests, profiles and groups against JSON schemas
+        shell: pwsh
+        run: |
+          Get-ChildItem -LiteralPath 'config/features' -Filter '*.json' | ForEach-Object {
+            Test-Json -Json (Get-Content -LiteralPath $_.FullName -Raw -Encoding UTF8) -SchemaFile 'schema/features.schema.json'
+            Write-Host "OK $($_.Name)"
+          }
+          Get-ChildItem -LiteralPath 'config/profiles' -Filter '*.json' | ForEach-Object {
+            Test-Json -Json (Get-Content -LiteralPath $_.FullName -Raw -Encoding UTF8) -SchemaFile 'schema/profiles.schema.json'
+            Write-Host "OK $($_.Name)"
+          }
+          Get-ChildItem -LiteralPath 'config/groups' -Filter '*.json' | ForEach-Object {
+            Test-Json -Json (Get-Content -LiteralPath $_.FullName -Raw -Encoding UTF8) -SchemaFile 'schema/groups.schema.json'
+            Write-Host "OK $($_.Name)"
+          }
+          Add-Content -LiteralPath step-trace.txt -Value 'validate-manifests OK'
+
+      - name: Packaging verification (catalog ships inside the artifact)
+        shell: pwsh
+        run: |
+          # v1.4 (item 1): regression gate for bug P0-1 - the release packaging
+          # must deliver the feature catalog inside the artifact. This step
+          # recreates the exact staging layout of release.yml and then
+          # exercises the module's own config resolution: no
+          # DOMOVOY_FEATURES_DIR override and a neutral working directory, so
+          # the repository checkout cannot satisfy the resolver.
+          $ErrorActionPreference = 'Stop'
+          try {
+            $stage = Join-Path $env:RUNNER_TEMP 'stage'
+            Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
+            New-Item -ItemType Directory -Path (Join-Path $stage 'Domovoy') -Force | Out-Null
+            Copy-Item -Path 'src/Domovoy/*' -Destination (Join-Path $stage 'Domovoy') -Recurse
+            Copy-Item -Path 'config','schema' -Destination (Join-Path $stage 'Domovoy/') -Recurse
+            Copy-Item -Path 'README.md','LICENSE' -Destination $stage
+
+            Remove-Item Env:DOMOVOY_FEATURES_DIR -ErrorAction SilentlyContinue
+            Set-Location $env:RUNNER_TEMP
+
+            Import-Module -Name (Join-Path $stage 'Domovoy/Domovoy.psd1') -Force
+            $features = @(Get-DomovoyFeature)
+            $profiles = @(Get-DomovoyProfile)
+            $groups = @(Get-DomovoyGroup)
+            Write-Host ("Staged artifact: features={0}, profiles={1}, groups={2}" -f $features.Count, $profiles.Count, $groups.Count)
+
+            $failed = $false
+            # 56 = current manifest count; -ge so the gate does not rot when
+            # the catalog grows.
+            if ($features.Count -lt 56) {
+              Write-Host ("::error::Staged catalog has {0} features, expected >= 56 - the shipped artifact would not see any feature (regression of P0-1)" -f $features.Count)
+              $failed = $true
+            }
+            if ($profiles.Count -lt 2) {
+              Write-Host ("::error::Staged artifact carries {0} profiles, expected >= 2" -f $profiles.Count)
+              $failed = $true
+            }
+            if ($groups.Count -lt 2) {
+              Write-Host ("::error::Staged artifact carries {0} groups, expected >= 2" -f $groups.Count)
+              $failed = $true
+            }
+            $dups = @($features | Group-Object -Property Id | Where-Object { $_.Count -gt 1 })
+            foreach ($d in $dups) {
+              Write-Host ("::error::Duplicate feature id '{0}' occurs {1} times in the staged catalog" -f $d.Name, $d.Count)
+              $failed = $true
+            }
+            if ($failed) { exit 1 }
+            Write-Host 'Packaging verification passed: the staged artifact carries the full catalog.'
+            Add-Content -LiteralPath step-trace.txt -Value 'packaging OK'
+          }
+          catch {
+            Write-Host ("::error::Packaging verification failed: {0}" -f $_.Exception.Message)
+            exit 1
+          }
+
+      - name: Portable exe shim gate (compile + smoke + winget templates)
+        shell: pwsh
+        run: |
+          # v1.5.2: the winget portable manifest targets Domovoy/domovoy.exe -
+          # winget-cli accepts ONLY ".exe" for NestedInstallerType portable
+          # (s_AllowedPortableFiletypes in ManifestValidation.cpp); the earlier
+          # domovoy.ps1 target was rejected by the winget-pkgs validation
+          # pipeline (PR microsoft/winget-pkgs#469700, verdict 2026-11-03).
+          # This gate proves, on every push, that the shim source compiles,
+          # works directly AND through a symlink (the production winget
+          # portable path), and that the winget templates carry the
+          # validator-required shape.
+          $ErrorActionPreference = 'Stop'
+          try {
+            # (a) compile with the .NET Framework csc shipped on the runner
+            $csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+            if (-not (Test-Path -LiteralPath $csc -PathType Leaf)) { throw "csc.exe not found at $csc" }
+            $stage = Join-Path $env:RUNNER_TEMP 'shim-stage\Domovoy'
+            New-Item -ItemType Directory -Path $stage -Force | Out-Null
+            Copy-Item -Path 'src/Domovoy/*' -Destination $stage -Recurse
+            Copy-Item -Path 'config','schema' -Destination "$stage/" -Recurse
+            Copy-Item -Path 'packaging/shim/domovoy.ps1' -Destination $stage
+            # Copy the source next to the output and compile from a full
+            # backslash path: csc.exe (CS1504) did not receive the
+            # forward-slash relative path intact from the pwsh native call.
+            Copy-Item -Path 'packaging/shim/DomovoyShim.cs' -Destination $stage
+            & $csc /nologo /target:exe /out:"$stage\domovoy.exe" "$stage\DomovoyShim.cs"
+            if ($LASTEXITCODE -ne 0) { throw "csc failed with exit code $LASTEXITCODE" }
+            # (b) direct smoke
+            $out = & "$stage\domovoy.exe" Get-DomovoyLanguage
+            if ($LASTEXITCODE -ne 0) { throw "domovoy.exe returned exit code $LASTEXITCODE" }
+            $joined = ($out -join ' ')
+            if ($joined -notmatch 'en\s+default') { throw "unexpected shim output: $joined" }
+            # (c) symlink smoke - the winget portable production path
+            $links = Join-Path $env:RUNNER_TEMP 'links'
+            New-Item -ItemType Directory -Path $links -Force | Out-Null
+            $link = Join-Path $links 'domovoy.exe'
+            New-Item -ItemType SymbolicLink -Path $link -Target "$stage\domovoy.exe" | Out-Null
+            $out = & $link Get-DomovoyLanguage
+            if ($LASTEXITCODE -ne 0) { throw "symlinked domovoy.exe returned exit code $LASTEXITCODE" }
+            $joined = ($out -join ' ')
+            if ($joined -notmatch 'en\s+default') { throw "unexpected symlinked shim output: $joined" }
+            # (d) the winget templates must carry the validator-required shape
+            $installer = Get-Content -LiteralPath 'packaging/winget/Rtynbirf.Domovoy.installer.template.yaml' -Raw
+            if ($installer -notmatch 'RelativeFilePath:\s*Domovoy/domovoy\.exe') { throw 'installer template does not target Domovoy/domovoy.exe' }
+            if ($installer -match 'RelativeFilePath:\s*Domovoy/domovoy\.ps1') { throw 'installer template still targets the rejected domovoy.ps1' }
+            foreach ($t in @('version', 'installer', 'locale.en-US')) {
+              $path = "packaging/winget/Rtynbirf.Domovoy.$t.template.yaml"
+              $text = Get-Content -LiteralPath $path -Raw
+              if ($text -notmatch 'ManifestVersion:\s*1\.12\.0') { throw "$path does not declare ManifestVersion 1.12.0" }
+              if ($text -notmatch '(?m)^#\s*yaml-language-server:\s*\$schema=https://aka\.ms/winget-manifest\.') { throw "$path misses the yaml-language-server schema header" }
+            }
+            Write-Host 'Portable exe shim gate passed: compile OK, direct smoke OK, symlink smoke OK, templates OK.'
+            Add-Content -LiteralPath step-trace.txt -Value 'shim-gate OK'
+          }
+          catch {
+            Write-Host ("::error::Portable exe shim gate failed: {0}" -f $_.Exception.Message)
+            exit 1
+          }
+
+      - name: Documentation freshness gate
+        shell: pwsh
+        run: |
+          # v1.4 (item 2): keep the prose honest.
+          # (a) every "N публичн*" claim in README.md must equal the real
+          #     FunctionsToExport count of the module manifest;
+          # (b) every version marked "запланировано" in docs/features.md must
+          #     NOT have a CHANGELOG section yet (a released version always has
+          #     one) - catches silently carried-over planned features.
+          $ErrorActionPreference = 'Stop'
+          $failed = $false
+
+          # (a) README public-command claims vs manifest FunctionsToExport
+          $manifest = Import-PowerShellDataFile -Path 'src/Domovoy/Domovoy.psd1'
+          $exported = @($manifest.FunctionsToExport).Count
+          $readme = Get-Content -LiteralPath 'README.md' -Raw -Encoding UTF8
+          $claims = @([regex]::Matches($readme, '(\d+)\s+публичн'))
+          if ($claims.Count -eq 0) {
+            Write-Host '::error::README.md contains no "N публичн*" public-command claim - the freshness gate needs at least one claim to verify'
+            $failed = $true
+          }
+          foreach ($c in $claims) {
+            $claimed = [int]$c.Groups[1].Value
+            Write-Host ("README claim: {0} public commands (manifest exports: {1})" -f $claimed, $exported)
+            if ($claimed -ne $exported) {
+              Write-Host ("::error::README.md claims {0} public commands but Domovoy.psd1 exports {1} - update the README" -f $claimed, $exported)
+              $failed = $true
+            }
+          }
+
+          # (b) planned versions in docs/features.md must not be released yet.
+          # Versions are matched in tight proximity to the word
+          # "запланировано" (either word order, markdown bold tolerated), so
+          # unrelated version mentions on the same line (e.g. "перенос из
+          # v1.2") are not counted as planned.
+          $featuresDoc = Get-Content -LiteralPath 'docs/features.md' -Raw -Encoding UTF8
+          $opts = [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+          $planned = @()
+          foreach ($m in [regex]::Matches($featuresDoc, 'запланировано\s+v(\d+\.\d+(?:\.\d+)?)', $opts)) {
+            $planned += $m.Groups[1].Value
+          }
+          foreach ($m in [regex]::Matches($featuresDoc, 'v(\d+\.\d+(?:\.\d+)?)\s*\*{0,2}\s*\(\s*запланировано', $opts)) {
+            $planned += $m.Groups[1].Value
+          }
+          $planned = @($planned | Sort-Object -Unique)
+          $plannedText = if ($planned.Count -gt 0) { $planned -join ', ' } else { '(none)' }
+          Write-Host ("Planned versions in docs/features.md: {0}" -f $plannedText)
+          $changelog = Get-Content -LiteralPath 'CHANGELOG.md' -Encoding UTF8
+          foreach ($v in $planned) {
+            $pattern = '^##\s*\[' + [regex]::Escape($v) + '(\.\d+)*\]'
+            $hits = @($changelog | Where-Object { $_ -match $pattern })
+            foreach ($h in $hits) {
+              Write-Host ("::error::docs/features.md still plans v{0} but CHANGELOG.md already has section '{1}' - silently carried-over feature detected" -f $v, $h.Trim())
+              $failed = $true
+            }
+          }
+
+          if ($failed) { exit 1 }
+          Write-Host 'Documentation freshness gate passed.'
+          Add-Content -LiteralPath step-trace.txt -Value 'docs-gate OK'
+
+      - name: Help content gate (.SYNOPSIS + .EXAMPLE on every public command)
+        shell: pwsh
+        run: |
+          # v1.6 (item 5): updatable help is generated from comment-based
+          # help. A public command without .SYNOPSIS or without at least
+          # one .EXAMPLE would ship as a silent entry in the help cab.
+          # One file must hold exactly one public command - the documented
+          # layout - so file-level markers can never mask a silent second
+          # function.
+          $failed = $false
+          $files = Get-ChildItem -Path 'src/Domovoy/Public' -Filter '*.ps1'
+          foreach ($f in $files) {
+            $tokens = $null; $parseErrors = $null
+            $ast = [System.Management.Automation.Language.Parser]::ParseFile($f.FullName, [ref]$tokens, [ref]$parseErrors)
+            if ($parseErrors.Count -gt 0) {
+              Write-Host ("::error::{0}: parse errors - {1}" -f $f.Name, $parseErrors[0].Message)
+              $failed = $true
+              continue
+            }
+            $funcs = @($ast.FindAll({ param($a) $a -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $false))
+            if ($funcs.Count -ne 1) {
+              Write-Host ("::error::{0}: holds {1} function definitions - one file must hold exactly one public command" -f $f.Name, $funcs.Count)
+              $failed = $true
+              continue
+            }
+            $text = Get-Content -LiteralPath $f.FullName -Raw -Encoding UTF8
+            if ($text -notmatch '(?m)^\s*\.SYNOPSIS') {
+              Write-Host "::error::$($f.Name): the public command has no .SYNOPSIS"
+              $failed = $true
+            }
+            if ($text -notmatch '(?m)^\s*\.EXAMPLE') {
+              Write-Host "::error::$($f.Name): the public command has no .EXAMPLE"
+              $failed = $true
+            }
+          }
+          Write-Host ("Help content gate: {0} public command file(s) checked." -f $files.Count)
+          if ($failed) { exit 1 }
+          Add-Content -LiteralPath step-trace.txt -Value 'help-gate OK'
+
+      - name: Signature check (verifies when a signature is present)
+        shell: pwsh
+        run: |
+          # When the maintainer configures a signing certificate, every
+          # release ships signed files and CI verifies them. Without a
+          # certificate the module ships unsigned by design - the check
+          # accepts that state explicitly instead of pretending.
+          $files = Get-ChildItem -Path 'src/Domovoy' -Recurse -Include *.ps1,*.psm1,*.psd1
+          $signed = 0
+          foreach ($f in $files) {
+            $sig = Get-AuthenticodeSignature -FilePath $f.FullName
+            if ($sig.Status -eq 'NotSigned') { continue }
+            if ($sig.Status -ne 'Valid') {
+              Write-Host "::error::Invalid Authenticode signature: $($f.Name) ($($sig.Status))"
+              exit 1
+            }
+            $signed++
+          }
+          if ($signed -gt 0) {
+            Write-Host "Signature check passed: $signed signed file(s), all signatures Valid."
+          }
+          else {
+            Write-Host "No signatures present (no signing certificate configured) - accepted by design."
+          }
+          Add-Content -LiteralPath step-trace.txt -Value 'signature OK'
+
+      - name: Publish failure report to the ci-report branch
+        # A red run must leave readable facts behind. This step turns the
+        # NUnit results into a markdown report (failing tests AND failing
+        # suites, messages, stack traces - including the Should -Because
+        # diagnostic matrices), appends the step trace that names the last
+        # green gate, and force-pushes it to refs/heads/ci-report. The step
+        # is bulletproof by design: every failure inside it lands in the
+        # report itself, and a minimal report still gets pushed.
+        if: failure()
+        shell: pwsh
+        run: |
+          $lines = @(
+            '# CI failure report',
+            '',
+            ("- run: {0} on {1} ({2})" -f $env:GITHUB_RUN_NUMBER, $env:GITHUB_SHA, $env:GITHUB_REF),
+            ''
+          )
+          try {
+            if (Test-Path -LiteralPath 'step-trace.txt') {
+              $lines += '## step trace (the first missing OK names the culprit)'
+              $lines += '```text'
+              $lines += @(Get-Content -LiteralPath 'step-trace.txt')
+              $lines += '```'
+              $lines += ''
+            }
+            if (Test-Path -LiteralPath 'testResults.xml') {
+              [xml]$nunit = Get-Content -LiteralPath 'testResults.xml' -Raw -Encoding UTF8
+              # Pester's NUnit 2.5 writer spells the failing result 'Failure',
+              # not 'Failed' (run 51: the XPath matched nothing and the report
+              # claimed "failed test cases: 0" while the very same XML carried
+              # failures="2"). Match both spellings so the report cannot go
+              # blind again if the writer's vocabulary changes.
+              $cases = @($nunit.SelectNodes("//test-case[@result='Failed' or @result='Failure']"))
+              $suites = @($nunit.SelectNodes("//test-suite[@result='Failed' or @result='Failure']") | Where-Object { $_.GetAttribute('type') -eq 'TestFixture' })
+              $lines += ("- failed test cases: {0}; failed suites: {1}" -f $cases.Count, $suites.Count)
+              $lines += ''
+              foreach ($c in $cases) {
+                $fullName = $c.GetAttribute('fullname')
+                if (-not $fullName) { $fullName = $c.GetAttribute('name') }
+                $lines += ("## FAILED: {0}" -f $fullName)
+                foreach ($f in @($c.SelectNodes(".//failure"))) {
+                  $lines += '```text'
+                  $lines += [string]$f.GetAttribute('message')
+                  $lines += '```'
+                  foreach ($st in @($f.SelectNodes(".//stack-trace"))) {
+                    $lines += '```text'
+                    $lines += [string]$st.'#text'
+                    $lines += '```'
+                  }
+                }
+                $lines += ''
+              }
+              foreach ($s in $suites) {
+                $suiteName = $s.GetAttribute('fullname')
+                if (-not $suiteName) { $suiteName = $s.GetAttribute('name') }
+                $lines += ("## FAILED SUITE: {0}" -f $suiteName)
+                $lines += ''
+              }
+            }
+            else {
+              $lines += 'testResults.xml is missing - the failing step ran before Pester, or Pester crashed before writing it.'
+            }
+          }
+          catch {
+            $lines += ("report build error: {0}" -f $_.Exception.Message)
+          }
+          try {
+            git config user.name 'domovoy-ci'
+            git config user.email 'domovoy-ci@users.noreply.github.com'
+            $null = git fetch origin ci-report --depth=1 2>$null
+            if ($LASTEXITCODE -eq 0) {
+              git branch ci-report origin/ci-report 2>$null
+              git checkout -f ci-report 2>$null
+            }
+            else {
+              git checkout --orphan ci-report 2>$null
+              git rm -rf . 2>$null
+            }
+            # The report is written only AFTER the branch switch: a file
+            # written before checkout blocks it as an untracked collision
+            # (that is exactly how runs 48-49 lost their reports).
+            $onBranch = git branch --show-current
+            if ($onBranch -ne 'ci-report') { throw ("branch switch failed, on: {0}" -f $onBranch) }
+            Set-Content -LiteralPath 'ci-failure-report.md' -Value $lines -Encoding UTF8
+            if (Test-Path -LiteralPath 'testResults.xml') {
+              # The raw NUnit XML is the ground truth: counters, every case,
+              # every failure message and stack trace, nothing summarized.
+              Copy-Item -LiteralPath 'testResults.xml' -Destination 'testResults-latest.xml' -Force
+              git add testResults-latest.xml
+            }
+            git add ci-failure-report.md
+            git commit -m ("ci: failure report for run {0} ({1})" -f $env:GITHUB_RUN_NUMBER, $env:GITHUB_SHA.Substring(0, 7))
+            git push --force https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git ci-report:ci-report
+            Write-Host 'Failure report pushed to refs/heads/ci-report.'
+          }
+          catch {
+            Write-Host ("::error::the failure report could not be pushed: {0}" -f $_.Exception.Message)
+          }
+
+  ps51:
+    name: "PS 5.1 leg (windows-latest, experimental)"
+    runs-on: windows-latest
+    # Experimental until first observed green on a real runner; the v1.6 line
+    # turns this job blocking. The release gate (await-tests in release.yml)
+    # looks only at the main "test" job.
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Pester 5.7.1
+        shell: powershell
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -SkipPublisherCheck
+
+      - name: Import the module on Windows PowerShell 5.1
+        shell: powershell
+        run: |
+          # The manifest declares PowerShellVersion 5.1 - prove it imports on
+          # the real 5.1 engine, not only on pwsh 7.
+          Import-Module -Name (Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath 'src/Domovoy/Domovoy.psd1') -Force
+          $m = Get-Module -Name Domovoy
+          Write-Host ("Imported Domovoy {0} on PS {1}" -f $m.Version, $PSVersionTable.PSVersion.ToString())
+
+      - name: Run the 5.1-safe Pester files
+        shell: powershell
+        run: |
+          # v1.5 (item 4): only the test files verified to be 5.1-safe run on
+          # this leg (no pwsh-7-only syntax; fixtures are registry- and
+          # temp-file based, which works on a windows runner).
+          Import-Module -Name Pester -RequiredVersion 5.7.1
+          Import-Module -Name (Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath 'src/Domovoy/Domovoy.psd1') -Force
+          $config = New-PesterConfiguration
+          $config.Run.Path = @('tests/Domovoy.Loop.Tests.ps1', 'tests/Domovoy.Module.Tests.ps1')
+          $config.Run.Exit = $false
+          $config.Output.Verbosity = 'Detailed'
+          # PassThru is required for Invoke-Pester to return the run result
+          # object; without it $result is null and the gate below is inert.
+          $config.Run.PassThru = $true
+          $result = Invoke-Pester -Configuration $config
+          $lines = @(
+            "PS 5.1 leg - engine: $($PSVersionTable.PSVersion.ToString())",
+            "Files: tests/Domovoy.Loop.Tests.ps1, tests/Domovoy.Module.Tests.ps1",
+            "Tests passed: $($result.PassedCount), failed: $($result.FailedCount)"
+          )
+          foreach ($l in $lines) { Write-Host $l }
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ($lines -join "`n") -Encoding ASCII
+          foreach ($test in @($result.Failed)) {
+            foreach ($err in @($test.ErrorRecord)) {
+              $msg = ($err.Exception.Message -replace "`r?`n", ' ')
+              Write-Host ("::error::{0} :: {1}" -f $test.Path, $msg)
+            }
+          }
+          if ($result.FailedCount -gt 0) { exit 1 }

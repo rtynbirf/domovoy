@@ -1,0 +1,26 @@
+PHOENIX11 / MISSION УИЛЬЯМ / B1 VERIFICATION [Task 40] — 2026-10-25
+=================================================================
+ISO: 26100.1_PROFESSIONAL_X64_RU-RU.ISO (содержимое: Windows 11 26H2 26300.9807, ru-RU, Professional)
+Собран: официальным uupdump convert.sh v0.7.3 (Linux), install.wim LZMS max, boot.wim из WinRE+chntpw, genisoimage El Torito+UDF.
+
+Размер: 4 292 098 048 байт (4093.26 MiB) = 2 095 751 секторов x 2048 — подтверждено isoinfo.
+SHA256: f08f504ee044e83942b79660b773021ebadf66b3d45195f2156237a2a771e1c0
+  (подтверждено 3x независимо: 1) при генерации genisoimage|tee; 2) сумма скачанных ассетов релиза; 3) склейка из git-блобов)
+
+Структура (isoinfo + разбор):
+  - ISO 9660: PVD @ сектор 16, Volume id "26100.1_X64_RU-RU"
+  - UDF: BEA01@19, NSR02@20, TEA01@21 (гибрид как у MCT-образов)
+  - El Torito Validation Entry @1534: Hid=1, Arch=x86, Key 55AA, checksum 0 — OK
+  - BIOS entry: Bootid 0x88 (bootable), No Emulation, Nsect 8, LBA 2255 (etfsboot.com) — OK (isoinfo)
+  - EFI entry: Bootid 0x88 (bootable), No Emulation, Nsect 2880 (1.44MB), LBA 1535 (efisys.bin) — присутствует
+
+Ассеты релиза (ver. william-b1-iso-26300.9807):
+  iso.part00.iso f065b96a0f54de26ee619da6ad3c4cef0b01b4dcd53d87be7d6cd0be1a08a872
+  iso.part01.iso 67cf20152e69fb868c936690495d8c6edb4b6cc353d3ccedb5478ec86560e19a
+  iso.part02.iso f2c4ad1fc064fa84edb34357f0fc045f15e722448812b6694b50d7b3bfff2bff
+  iso.part03.iso 34feeb1a55d9bb3b4c90cd416d8edf0a09549913393dfaac01759483637a55e8
+  — все 4 совпали с хэшами, записанными при сборке; сумма размеров = размер ISO ровно.
+
+Склад чанков 40MiB: git-blobs (ветки iso_tmp_1..5 держат их живыми), MANIFEST.json с sha256/blob_sha1 каждого чанка — восстановление: scripts/chunk_tool.py pull.
+
+ВЕРДИКТ: B1 ЗАВЕРШЁН. Базис 26H2 собран и складирован. Следующий шаг — доставка/установка (кролик при готовности).

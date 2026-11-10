@@ -1,0 +1,70 @@
+{
+ "igpu_snb": {
+  "status": "ok",
+  "title": "ATI Technologies Inc. - Display - Mobile Intel(R) HD Graphics",
+  "uid": "d95b4cbb-840b-4faf-bdb7-3680cbdcaa8f",
+  "url": "https://catalog.s.download.windowsupdate.com/msdownload/update/driver/drvs/2011/06/20412857_4064d4ec87f6e2dbf5d09a4dba6167579254fd89.cab",
+  "size": 40408565,
+  "file": "/home/z/my-project/build/william_drivers/cabs/igpu_snb.cab"
+ },
+ "igpu_snb2": {
+  "status": "no_title_match",
+  "titles": [
+   "483f48a6 INTEL - System - 10.1.1.44",
+   "f67356c0 INTEL - System - 10.1.1.44",
+   "614d32dd INTEL - System - 10.1.1.44",
+   "747cffbb INTEL - System - 10.1.1.44",
+   "efaf8a21 INTEL - System - 10.1.1.44",
+   "4449a172 INTEL - System - 10.1.1.44",
+   "6bfed7ac INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40",
+   "ceea3c52 INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40",
+   "37745cca INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40",
+   "fb4f8f31 INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40",
+   "3f590c45 INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40",
+   "77b40f30 INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40",
+   "bc3ea9fd INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40",
+   "b3b5fa68 INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40",
+   "b80dde10 INTEL - System - 1/3/2017 12:00:00 AM - 10.1.1.40"
+  ]
+ },
+ "chipset": {
+  "status": "ok",
+  "title": "Intel - Other hardware - Intel(R) 6 Series/C200 Series Chipset Family LPC Interface Controller - 1C42",
+  "uid": "ed64e03a-64a1-4d46-a252-d60def9fa715",
+  "url": "https://catalog.s.download.windowsupdate.com/c/msdownload/update/driver/drvs/2016/11/20956510_0a3caf46ae70a8b608a4a652b388b92c0b410871.cab",
+  "size": 60161,
+  "file": "/home/z/my-project/build/william_drivers/cabs/chipset.cab"
+ },
+ "me": {
+  "status": "no_title_match",
+  "titles": [
+   "846ea670 Intel System Driver Update (2603.9.4.0)",
+   "1c9c1d22 Intel System Driver Update (2603.9.4.0)",
+   "4a8febf1 Intel System Driver Update (2603.9.4.0)",
+   "334131c9 Intel System Driver Update (2603.9.4.0)",
+   "56fa38d3 Intel System Driver Update (2603.9.4.0)",
+   "96e832f6 Intel System Driver Update (2603.9.4.0)",
+   "b9568654 Intel System Driver Update (2603.9.4.0)",
+   "e236390a Intel System Driver Update (2603.9.4.0)",
+   "0c59fe98 Intel System Driver Update (2603.9.4.0)",
+   "b1d1ff58 Intel System Driver Update (2603.9.4.0)",
+   "fab7a502 Intel System Driver Update (2603.9.4.0)",
+   "c26c8ec7 Intel System Driver Update (2603.9.4.0)",
+   "949976ae Intel System Driver Update (2603.9.4.0)",
+   "cf9c7b36 Intel System Driver Update (2603.9.4.0)",
+   "d69eb215 Intel System Driver Update (2603.9.4.0)"
+  ]
+ },
+ "lan_rtl": {
+  "status": "ok",
+  "title": "Realtek Semiconductor Corp. - Network - Realtek RTL8168/8111 PCI-E Gigabit Ethernet NIC",
+  "uid": "aba894bc-f0e0-4b57-8cb1-b484cab1cacb",
+  "url": "https://catalog.s.download.windowsupdate.com/msdownload/update/driver/drvs/2008/11/20221182_db860544169858e22121dd73bf404afed63bcdf3.cab",
+  "size": 196843,
+  "file": "/home/z/my-project/build/william_drivers/cabs/lan_rtl.cab"
+ },
+ "audio_via": {
+  "status": "no_results",
+  "query": "VIA VT1708S"
+ }
+}

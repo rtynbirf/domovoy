@@ -1,0 +1,45 @@
+name: evidence-chain
+
+# ПРЕДЛОЖЕНИЕ-40 (issue #5): хеш-цепь свидетельств SEALS.jsonl (П-09) +
+# SLSA-аттестация ISO 0.2-BISECT. На каждый пуш:
+#   1) verifier цепи — 0 разрывов (голова публикуется в summary);
+#   2) selftest свидетельств: пломба canon v2 append+verify, DSSE-конверт
+#      attest→verify с тампер-тестами, сшивка sha256 ISO:
+#      PROVEN-строка == SEALS.jsonl == subject конверта.
+# Реальный `cosign verify` с ключом — шаг Хозяина (PROVEN/COSIGN-ATTEST-PROTOCOL.md).
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Верификация хеш-цепи SEALS.jsonl (П-09)
+        run: python3 tools/verify_seals.py SEALS.jsonl
+
+      - name: Selftest свидетельств (цепь · пломбы · DSSE-аттестация · сшивка ISO)
+        run: python3 tools/selftest_evidence.py
+
+      - name: Голова цепочки — в summary (тампер-очевидность одним числом)
+        if: always()
+        run: |
+          python3 tools/verify_seals.py SEALS.jsonl --json > chain-report.json || true
+          python3 - <<'PY'
+          import json
+          r = json.load(open('chain-report.json'))
+          print(f"SEALS.jsonl: записей {r['records']} (legacy {r['legacy']}, canon v2 {r['v2']}), разрывов {len(r['breaks'])}")
+          print(f"ГОЛОВА ЦЕПОЧКИ: `{r['head']}`")
+          PY
+      # Память прогона артефактом снята волной ×4: квота Artifact storage аккаунта
+      # исчерпана (Failed to CreateArtifact, 2026-11-08) — красила зелёные гейты.
+      # Свидетельство = сам прогон + head цепочки в summary.

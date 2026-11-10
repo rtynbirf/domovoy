@@ -1,0 +1,53 @@
+H-PE11 // BOMB REPORT v1.2 (sandbox build)
+Дата: 2026-10-17 21:09:47 UTC
+Закон: ЧЕЛОВЕК=СИСТЕМА=ЦЕЛОЕ | ЭВ.1: недоступно = НЕ сделано ([--])
+База: Windows 11 26H2 x64 ru-RU boot.wim (26300.9457), официальный MS CDN
+Инструменты: wimlib 1.14.4 + pycdlib (ADK/DISM НЕ использовались)
+
+== ЭВ.1 СВОД ==
+[x] База boot.wim: официальный boot.wim MS 26H2, index 2 (Setup PE)
+[x] WMI в PE (wbem/cimwin32.dll — уже в базе)
+[x] drvload/pnputil/netsh/wpeinit (уже в базе)
+[x] curl.exe 8.23 -> System32 (in-box curl [--] в базе)
+[x] wget.cmd-обёртка (GNU wget: хостинги отдают не бинарник [--])
+[x] Python 3.12.8 embeddable -> X:\Tools\Python
+[x] 7-Zip 7zr.exe -> X:\Tools\7-Zip
+[x] Notepad++ 8.9.8 portable -> X:\Tools\Notepad++
+[x] Sysinternals избранное (16 exe) -> X:\Tools\Sysinternals
+[x] PowerShell 7.4.6 portable -> носитель Y:\HPE11\PSSeven
+[x] Курсоры XpucT (17) -> X:\Windows\Cursors\XpucT + схема через reg add + SPI
+[x] startnet.cmd v1.2: wpeinit + drvload + PATH + курсоры + консоль
+[x] Volume2 v1.1.9.470 portable (скины) -> Y:\Programs\Volume2
+[x] HMS x64 (распакован из setup, без запуска) -> Y:\Programs\HMS
+[x] Драйверы whitelist (частично): Netwtw04, dptf_acpi, dptf_cpu, txei (+esif) -> drvload
+[x] wintun 0.14.1 -> drvload
+[x] VC++/DirectX редист-EXE на медиа (6 шт)
+[--] PowerShell 5.1/HTA/NetFx/DISM в WIM: без ADK-кабов не добавить; PS7 компенсирует
+[--] VC++ 2015-2022 DLL (x64+x86) в WIM: источники интернета мертвы (7z/nuget/pypi);
+     накатываются runtime-копией с Y:\HPE11\VC (payload\VC от get-ammo) или редист-EXE
+[--] DirectX d3dx DLL: directx_Jun2010_redist удалён с MS, зеркала (TPUp/guru3d/archive) недоступны
+[--] Login Unlocker / NTPWEdit: хостинги недоступны; путь доложения Y:\HPE11\LoginUnlocker
+[--] SSTR DriverPacks: sdi-tool/delahoy/archive.org недоступны; положить в Y:\DriverPacks с H:\SSTR
+[--] Драйверы iigd_dch/apollolake/ialpss2_bxt_p/rtsuer: не найдены в Update Catalog запросами;
+     станция: WinPE_Drivers (H-PE11_Collect_*) + build-bomb.ps1 контракт / drvload вручную
+[--] Дым в эмуляторе: qemu в песочнице недоступен (нет рута); статические проверки выполнены
+
+== ДЫМОВОЙ КОНТРАКТ (файлы внутри образа) ==
+[x] X:\Windows/System32/curl.exe
+[x] X:\Windows/System32/wbem/cimwin32.dll
+[x] X:\Windows/System32/startnet.cmd
+[x] X:\Windows/Cursors/XpucT/01 XpucT - normal.cur
+[x] X:\Tools/Python/python.exe
+[x] X:\Tools/7-Zip/7zr.exe
+[x] X:\HPE11/HPE11.cmd
+[x] Y:\PS7/pwsh.exe
+[x] Y:\Programs/Volume2/Volume2.exe
+[--] Y:\Programs/HMS/HMS.exe (НЕТ!)
+[x] Y:\Drivers/HPE11/netwtw04/Netwtw04.INF
+[x] Y:\HPE11/BOMB-REPORT.txt
+
+== ПРОВЕРКА НА ЖЕЛЕЗЕ (делает Хозяин) ==
+1) Rufus/dd -> USB, BIOS и UEFI загрузки [--]
+2) консоль H-PE11, мышь, курсоры XpucT [--]
+3) ipconfig, drvload WLAN, pwsh -v, python -V [--]
+4) Volume2, HMS [--]

@@ -1,0 +1,10 @@
+{
+ "payload": "{\"_type\":\"https://in-toto.io/Statement/v0.1\",\"predicate\":{\"buildType\":\"https://github.com/rtynbirf/H-PE11-PHOENIX/proven-works/iso-bisect\",\"builder\":{\"id\":\"https://github.com/rtynbirf/H-PE11-PHOENIX/.github/workflows/evidence-chain.yml@main\"},\"invocation\":{\"configSource\":{\"digest\":{\"sha256\":\"7ef8240b9c6aab8c14e34e4fd1a9359d3f93e116788f1f6858024b381504b392\"},\"entryPoint\":\"PROVEN/SHA256SUMS-BISECT.txt\",\"uri\":\"https://github.com/rtynbirf/H-PE11-PHOENIX\"},\"environment\":{\"law\":\"Law 4: сначала хеш, потом дело\"},\"parameters\":{\"note\":\"Заготовка аттестации: subject digest = sha256 целого ISO 0.2-BISECT из PROVEN/SHA256SUMS-BISECT.txt (артефакт вне репо по .gitignore *.iso; подпись добавляет Хозяин cosign по протоколу PROVEN/COSIGN-ATTEST-PROTOCOL.md)\"}},\"materials\":[],\"metadata\":{\"completeness\":{\"environment\":false,\"materials\":false,\"parameters\":true},\"reproducible\":false}},\"predicateType\":\"https://slsa.dev/provenance/v0.2\",\"subject\":[{\"digest\":{\"sha256\":\"12332871ac64bc2fb21b0139a927f6ea8972378004ebcd5d5aaaac3c8ccfd43a\"},\"name\":\"PHOENIX-ALPHA-0.2-BISECT.iso\"}]}",
+ "payloadType": "application/vnd.in-toto+json",
+ "signatures": [
+  {
+   "keyid": "unsigned",
+   "sig": null
+  }
+ ]
+}

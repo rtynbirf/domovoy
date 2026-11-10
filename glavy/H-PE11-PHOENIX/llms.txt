@@ -1,0 +1,37 @@
+# H-PE11-PHOENIX
+> PHOENIX-11: ворклог операций TH-* (журнал неповторимых результатов), сборки WinPE, сессии. Правила ведения — в rtynbirf/repo-doctrine.
+
+Автоген 2026-11-08 · источник: живой GitHub API (номера и файлы не руками) · владелец rtynbirf · ветка `main`
+
+## Мембрана
+- README.md — для человека (ФЕНИКС-11 // PHOENIX-11)
+- AGENTS.md — есть
+- LICENSE — MIT
+- topics: operations, phoenix, system-layer, windows-11, winpe, worklog
+
+## Карта корня
+- .github/
+- .gitignore
+- AGENTS.md
+- BUILDERS.md
+- CODEOWNERS
+- CONTRIBUTING.md
+- CREATIONS.md
+- HEROES.md
+- LICENSE
+- MEMORY.md
+- MISSION_WILLIAM.md
+- PHOENIX-BRAND.md
+- PHX-HUB/
+- PHX-OPTIMAL/
+- PULSE.md
+- … ещё 10
+
+## CI
+- workflow: guardian-tripwire
+- workflow: self-audit
+
+## Ссылки
+- [GitHub](https://github.com/rtynbirf/H-PE11-PHOENIX)
+- [README](https://github.com/rtynbirf/H-PE11-PHOENIX/blob/main/README.md)
+- [raw llms.txt](https://raw.githubusercontent.com/rtynbirf/H-PE11-PHOENIX/main/llms.txt)
