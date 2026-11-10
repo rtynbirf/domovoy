@@ -1,0 +1,40 @@
+# CRA-SLA контур роя (Э-2.3, волна ×5): 24-ч SLA на уязвимостные события.
+# Еженедельно: selftest tools/cra_sla.py + живой прогон против существующего
+# SEALS.jsonl и reports/cra-events.jsonl (журнала может не быть — событий нет → 🟢).
+# Красный вердикт падает джобой — гейт честный, без приукрашивания.
+name: cra-sla
+
+on:
+  schedule:
+    - cron: "0 6 * * 2" # вторник 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wave5-cra-sla
+  cancel-in-progress: false
+
+jobs:
+  cra-sla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout (пин v4)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Selftest SLA-контура (зелёный и красный сценарии)
+        run: python3 tools/cra_sla.py --selftest
+
+      - name: Живой CRA-SLA прогон (гейт)
+        run: |
+          set -o pipefail
+          python3 tools/cra_sla.py --seals SEALS.jsonl --events reports/cra-events.jsonl 2>&1 | tee cra-sla-stdout.txt
+          {
+            echo "## cra-sla · $(date -u +%Y-%m-%d)"
+            echo ''
+            echo '```text'
+            cat cra-sla-stdout.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

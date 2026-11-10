@@ -1,0 +1,77 @@
+{
+  "Version": 1,
+  "Playbook": {
+    "Id": "505bd74cf3485ec8a3111ef4354bbeb4",
+    "Name": "PHX-OPTIMAL MAINTENANCE (питание / AI / WinSxS / temp)",
+    "Description": "4 скрипта: питание High Performance под HDD (диск не отключается, гибернация off), снятие AI-раздутости, очистка WinSxS без ResetBase, очистка temp и кэшей. Запускать ПОСЛЕ TUNING и перезагрузки. DISM долгий - это норма.",
+    "Steps": [
+      {
+        "Id": "84904d047bfd5732bd26f86dca24a3a4",
+        "Type": 2,
+        "ReferenceId": "425bccc092b6531d83f4f1cc34334429",
+        "Name": "ПИТАНИЕ: High Performance + HDD не спит",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "14f9a3a4a24951f3b589cc839554494e",
+        "Type": 2,
+        "ReferenceId": "0d7e5e1d7cef525b910bce16efa8ced1",
+        "Name": "AI-раздутость: снять Copilot/Recall",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "51fedd1111c153b9b98be38376e5196e",
+        "Type": 2,
+        "ReferenceId": "6fba151b1fe3549aa92f01a5697e6379",
+        "Name": "WinSxS: DISM StartComponentCleanup",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      },
+      {
+        "Id": "f7e84cbe52455b35b34dd4b76071ab0b",
+        "Type": 2,
+        "ReferenceId": "38a2960d74db5e038770319ecee0b907",
+        "Name": "Temp и кэши: очистка с отчётом",
+        "WingetId": "",
+        "TargetEnabled": true,
+        "Data": ""
+      }
+    ]
+  },
+  "CustomTweaks": [],
+  "CustomScripts": [
+    {
+      "Id": "425bccc092b6531d83f4f1cc34334429",
+      "Name": "ПИТАНИЕ: High Performance + HDD не спит",
+      "Language": 0,
+      "Content": "# PHX-OPTIMAL: ПИТАНИЕ под i3-2120 + HDD (High Performance, диск не спит)\n$ErrorActionPreference = 'Continue'\npowercfg -setactive SCHEME_MIN\npowercfg -change monitor-timeout-ac 15\npowercfg -change standby-timeout-ac 0\npowercfg -change hibernate-timeout-ac 0\npowercfg -change disk-timeout-ac 0\npowercfg /hibernate off\n# Процессор: минимум AC=100%, парковка ядер off (Sandy Bridge 2C/4T)\npowercfg -setacvalueindex scheme_current sub_processor PROCTHROTTLEMIN 100\npowercfg -setacvalueindex scheme_current sub_processor CPMINCORES 100\n# USB: выборочная приостановка off\npowercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0\n# PCIe ASPM: off (стабильность SATA/сети)\npowercfg -setacvalueindex scheme_current 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 0\npowercfg -setactive scheme_current\nWrite-Host ('Активный план: ' + ((powercfg /getactivescheme) -join ' '))\nWrite-Host 'Гибернация off: hiberfil.sys (~3,2 ГБ) вернулся на C:.'",
+      "RequiresAdministrator": true
+    },
+    {
+      "Id": "0d7e5e1d7cef525b910bce16efa8ced1",
+      "Name": "AI-раздутость: снять Copilot/Recall",
+      "Language": 0,
+      "Content": "# PHX-OPTIMAL: снятие AI-раздутости (Copilot / CoreAI / OfficeHub / Recall)\n$ErrorActionPreference = 'Continue'\n$pkgs = 'Microsoft.Copilot', 'Microsoft.Windows.Ai.Copilot.Provider', 'Microsoft.MicrosoftOfficeHub'\nforeach ($p in $pkgs) {\n    try {\n        $g = Get-AppxPackage -Name $p -ErrorAction SilentlyContinue\n        if ($g) { $g | Remove-AppxPackage; Write-Host ('Снят пакет: ' + $p) }\n        else    { Write-Host ('Не установлен: ' + $p) }\n    } catch { Write-Host ('Пропуск: ' + $p) }\n}\nforeach ($root in 'HKCU:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI',\n                   'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI') {\n    if (-not (Test-Path $root)) { New-Item -Path $root -Force | Out-Null }\n    Set-ItemProperty -Path $root -Name 'DisableAIDataAnalysis' -Value 1 -Type DWord\n    Set-ItemProperty -Path $root -Name 'AllowRecallEnablement' -Value 0 -Type DWord\n}\nWrite-Host 'Recall/AI-анализ: запрещён (HKCU+HKLM).'",
+      "RequiresAdministrator": true
+    },
+    {
+      "Id": "6fba151b1fe3549aa92f01a5697e6379",
+      "Name": "WinSxS: DISM StartComponentCleanup",
+      "Language": 0,
+      "Content": "# PHX-OPTIMAL: очистка WinSxS (StartComponentCleanup БЕЗ ResetBase)\n$ErrorActionPreference = 'Continue'\nWrite-Host 'DISM /StartComponentCleanup: это долго (15-60 мин), не закрывай.'\n$t0 = Get-Date\nDism.exe /Online /Cleanup-Image /StartComponentCleanup /NoRestart\n$min = [int]((Get-Date) - $t0).TotalMinutes\nWrite-Host ('Готово за {0} мин. Код выхода DISM: {1}' -f $min, $LASTEXITCODE)\nWrite-Host 'Откаты обновлений сохранены (/ResetBase НЕ применялся).'",
+      "RequiresAdministrator": true
+    },
+    {
+      "Id": "38a2960d74db5e038770319ecee0b907",
+      "Name": "Temp и кэши: очистка с отчётом",
+      "Language": 0,
+      "Content": "# PHX-OPTIMAL: temp + шейдерные кэши + кэш Delivery Optimization\n$ErrorActionPreference = 'SilentlyContinue'\n$before = (Get-PSDrive C).Free\n$targets = @(\n    $env:TEMP, 'C:\\Windows\\Temp',\n    \"$env:LOCALAPPDATA\\Microsoft\\Windows\\D3DSCache\", \"$env:LOCALAPPDATA\\D3DSCache\",\n    \"$env:LOCALAPPDATA\\NVIDIA\\DXCache\", \"$env:LOCALAPPDATA\\NVIDIA\\GLCache\",\n    \"$env:LOCALAPPDATA\\AMD\\DxCache\", \"$env:LOCALAPPDATA\\AMD\\Dxcache\",\n    \"$env:LOCALAPPDATA\\Intel\\ShaderCache\"\n)\nforeach ($t in $targets) {\n    if (Test-Path $t) { Get-ChildItem $t -Recurse -Force | Remove-Item -Recurse -Force }\n}\ntry { Delete-DeliveryOptimizationCache -Force } catch {}\n$after = (Get-PSDrive C).Free\nWrite-Host ('Освобождено: {0:n0} МБ.' -f (($after - $before) / 1MB))",
+      "RequiresAdministrator": true
+    }
+  ]
+}

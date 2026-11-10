@@ -1,0 +1,10 @@
+{
+ "lan": {
+  "key": "04_lan_realtek_rtl8168_8111",
+  "uid": "8ac1152f-b170-4655-a7ae-2a42736664b2",
+  "title": "Realtek RTL8168/8111 PCI-E Gigabit Ethernet NIC",
+  "url": "https://catalog.s.download.windowsupdate.com/msdownload/update/driver/drvs/2009/02/20239473_87d293a4eb0f9afdb6f5da28916a23f9481598b7.cab",
+  "size": 223255,
+  "file": "/home/z/my-project/build/william_drivers/cabs/04_lan_realtek_rtl8168_8111.cab"
+ }
+}

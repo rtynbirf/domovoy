@@ -1,0 +1,45 @@
+PHOENIX11 / MISSION УИЛЬЯМ / B1 v2 TURNKEY VERIFICATION [Task 41] — 2026-10-25
+==============================================================================
+ISO: 26100.1_PROFESSIONAL_X64_RU-RU_WILLIAM_v2.ISO
+Содержимое: базис 26100.1 Pro ru-RU (ядро 24H2/25H2/26H2) + ЗАПЕЧЁННЫЙ bypass
+(autounattend) + твики + АВТО-цепочка 26H2 (SSU -> CU -> eKB) на первом входе.
+
+Размер: 4 825 690 112 байт (4602.0 MiB)
+SHA256: b02e6dba241298824259e5e8a2a7b61a595b6b9d083b95284b3be15112e95150
+  (генерация стримом = сумма чанков; roundtrip pull из репы = совпадение байт-в-байт)
+
+Отличия от v1 (26100.1_PROFESSIONAL_X64_RU-RU.ISO):
+  + autounattend.xml в корне (LabConfig bypass TPM/SecureBoot/CPU/RAM/Storage;
+    ru-RU; локальная учётка 6orman; FirstLogon: твики + async-цепочка 26H2)
+  + WILLIAM/tweaks.cmd, apply_updates.cmd, README_WILLIAM.txt
+  + WILLIAM/UPDATES: SSU-26100.1738-x64.cab (20.1MB),
+    Windows11.0-KB5121794-x64.cab (26KB, eKB 26100->26300, sha1 edc390e7...),
+    KB5127648_x64.msu (533.8MB, CU 26300.9711, express psf внутри), README_Updates
+  - __chunk_data (мусор стрим-пуша Task 40) УДАЛЁН
+
+Верификация:
+  - isoinfo -d: ISO9660 PVD, Volume "26100.1_X64_RU-RU", volume size 2356294 x 2048
+  - El Torito: validation header OK; ДВЕ bootable записи:
+      BIOS: no-emul, LBA 2265, 8 секторов (etfsboot.com)
+      UEFI: no-emul, LBA 1545, 2880 секторов (efisys.bin)  <- станция CSM-only: BIOS
+  - isovfy: No errors found
+  - UDF (7z l): autounattend.xml + WILLIAM/ (+UPDATES) + boot/etfsboot.com +
+    efi/microsoft/boot/efisys.bin — все на месте; __chunk_data отсутствует
+  - Байт-сверка запечённых файлов с исходниками: autounattend.xml (38f97e25...),
+    apply_updates.cmd (cd26285a...), tweaks.cmd (ed7e98df...) — OK
+  - Roundtrip: 116 чанков репы -> локально -> sha256 совпал [x]
+
+Склад:
+  - Git чанки 40MiB: artifacts/iso_26100.1_pro_ru_v2/ + MANIFEST.json
+    (блобы живут в дереве коммита 12f2f71669a; pull: scripts/chunk_tool.py)
+  - Release william-b1-iso-v2-turnkey (id 423108931): 5 ассетов ~920MiB +
+    SHA256SUMS_ISO_v2.txt — путь скачивания для кролика
+
+Цепочка 26H2 (apply_updates.cmd, DISM /Online на первом логоне, порядок важен):
+  1. SSU-26100.1738 (servicing stack)
+  2. CU KB5127648 -> 26100.9711 (psf-express: DISM может отказаться -> WU докатит)
+  3. eKB KB5121794 -> флип 26300 = 26H2 (требует базис >= 26100.9544 — потому после CU)
+  Логи: C:\WILLIAM\updates.log; перезагрузка НЕ назначается автоматически.
+
+ВЕРДИКТ: B1 v2 ЗАВЕРШЁН — turnkey-образ: записал через Rufus (MBR+NTFS) -> загрузился ->
+установилось само -> 26H2 приехала сама. B2 верифицирован (базис 26100.1 + цепочка).
