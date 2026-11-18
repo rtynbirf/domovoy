@@ -1,14 +1,14 @@
 # КНИГА ДОМОВОГО
 
 <div align="center">
-  <img src="banner.png" width="100%" alt="Штандарт domovoy: обсидиан и расплавленное золото, кузня rtynbirf" />
+  <img src="https://cdn.jsdelivr.net/gh/rtynbirf/domovoy@main/banner.png" width="100%" alt="Штандарт domovoy: обсидиан и расплавленное золото, кузня rtynbirf" />
 </div>
 
 <!--ФОРЖ:МУЗА:НАЧАЛО-->
 <div align="center">
-  <img src="repo-muse.svg" width="100%" alt="Муза domovoy: мастерская ЭНСО · КИСТЬ, кузня ПОЛИМАТ, раунд 12 · REVE=РЕВО" />
+  <img src="https://cdn.jsdelivr.net/gh/rtynbirf/domovoy@main/repo-muse.svg" width="100%" alt="Муза domovoy: мастерская ЭНСО · КИСТЬ, кузня ПОЛИМАТ, раунд 12 · REVE=РЕВО" />
   <br/>
-  <img src="forge-divider.svg" width="62%" alt="делитель мастерской ЭНСО · КИСТЬ" />
+  <img src="https://cdn.jsdelivr.net/gh/rtynbirf/domovoy@main/forge-divider.svg" width="62%" alt="делитель мастерской ЭНСО · КИСТЬ" />
 </div>
 <!--ФОРЖ:МУЗА:КОНЕЦ-->
 
