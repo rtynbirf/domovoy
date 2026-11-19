@@ -1,3 +1,9 @@
+<div align="center">
+
+<a href="https://github.com/rtynbirf/domovoy"><img src="banner.png" width="100%" alt="domovoy — штандарт мастерской в каноне ORNAMENTAL MYTHO-REALISM"></a>
+
+</div>
+
 # КНИГА ДОМОВОГО
 
 <div align="center">
@@ -19,7 +25,7 @@
 
 | ФАЙЛОВ | ПАПОК | КОММИТОВ | ОБНОВЛЕНО | РЕЛИЗОВ |
 |---:|---:|---:|---|---:|
-| 615 | 89 | 91 | 2026-11-19 | 1 |
+| 615 | 87 | 92 | 2026-11-19 | 0 |
 <!--ФОРЖ:ПАСПОРТ:КОНЕЦ-->
 
 
