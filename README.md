@@ -37,12 +37,12 @@
 
 | Глава | Источник | Файлов | Коммитов в ориг. | Снимок |
 |---|---|---|---|---|
-| [domovenok](glavy/domovenok/) | [оригинал](https://github.com/rtynbirf/domovenok) | 125 | 21 | `1a8cf9b` |
-| [domovoy-tweaker](glavy/domovoy-tweaker/) | [оригинал](https://github.com/rtynbirf/domovoy-tweaker) | 216 | 121 | `539b5ea` |
-| [domovoy-ritual](glavy/domovoy-ritual/) | [оригинал](https://github.com/rtynbirf/domovoy-ritual) | 10 | 14 | `f88a6d2` |
-| [khozyain](glavy/khozyain/) | [оригинал](https://github.com/rtynbirf/khozyain) | 9 | 1 | `5385fbb` |
-| [H-PE11-PHOENIX](glavy/H-PE11-PHOENIX/) | [оригинал](https://github.com/rtynbirf/H-PE11-PHOENIX) | 190 | 239 | `b82eefa` |
-| [os-forge](glavy/os-forge/) | [оригинал](https://github.com/rtynbirf/os-forge) | 48 | 34 | `965b17a` |
+| [domovenok](https://github.com/rtynbirf/domovoy/tree/main/glavy/domovenok) | [оригинал](https://github.com/rtynbirf/domovenok) | 125 | 21 | `1a8cf9b` |
+| [domovoy-tweaker](https://github.com/rtynbirf/domovoy/tree/main/glavy/domovoy-tweaker) | [оригинал](https://github.com/rtynbirf/domovoy-tweaker) | 216 | 121 | `539b5ea` |
+| [domovoy-ritual](https://github.com/rtynbirf/domovoy/tree/main/glavy/domovoy-ritual) | [оригинал](https://github.com/rtynbirf/domovoy-ritual) | 10 | 14 | `f88a6d2` |
+| [khozyain](https://github.com/rtynbirf/domovoy/tree/main/glavy/khozyain) | [оригинал](https://github.com/rtynbirf/khozyain) | 9 | 1 | `5385fbb` |
+| [H-PE11-PHOENIX](https://github.com/rtynbirf/domovoy/tree/main/glavy/H-PE11-PHOENIX) | [оригинал](https://github.com/rtynbirf/H-PE11-PHOENIX) | 190 | 239 | `b82eefa` |
+| [os-forge](https://github.com/rtynbirf/domovoy/tree/main/glavy/os-forge) | [оригинал](https://github.com/rtynbirf/os-forge) | 48 | 34 | `965b17a` |
 
 ## О чём эта книга
 
