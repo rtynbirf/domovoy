@@ -4,12 +4,6 @@
 
 </div>
 
-# КНИГА ДОМОВОГО
-
-<div align="center">
-  <img src="https://cdn.jsdelivr.net/gh/rtynbirf/domovoy@main/banner.png" width="100%" alt="Штандарт domovoy: обсидиан и расплавленное золото, кузня rtynbirf" />
-</div>
-
 <!--ФОРЖ:МУЗА:НАЧАЛО-->
 <div align="center">
   <img src="https://cdn.jsdelivr.net/gh/rtynbirf/domovoy@main/repo-muse.svg" width="100%" alt="Муза domovoy: мастерская ЭНСО · КИСТЬ, кузня ПОЛИМАТ, раунд 12 · REVE=РЕВО" />
@@ -20,13 +14,33 @@
 
 <!--ФОРЖ:ПАСПОРТ:НАЧАЛО-->
 <div align="center">
-  <img src="revo-page.svg" width="100%" alt="РЕВО-паспорт страницы domovoy в каноне ORNAMENTAL MYTHO-REALISM: орнаментальная решётка, медальон-миф, строение файлов, лексикон — по фактическому контенту" />
+  <img src="revo-page.svg" width="100%" alt="РЕВО-паспорт страницы domovoy №13 в каноне ORNAMENTAL MYTHO-REALISM: орнаментальная решётка, медальон-миф, строение файлов, лексикон — по фактическому контенту" />
 </div>
 
 | ФАЙЛОВ | ПАПОК | КОММИТОВ | ОБНОВЛЕНО | РЕЛИЗОВ |
 |---:|---:|---:|---|---:|
-| 625 | 90 | 152 | 2026-11-28 | 1 |
+| 625 | 96 | 1 | 2026-11-28 | 1 |
 <!--ФОРЖ:ПАСПОРТ:КОНЕЦ-->
+
+# domovoy
+
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/rtynbirf/domovoy@main/.github/social-preview.png" alt="domovoy" width="100%"></p>
+
+<div align="center">
+
+<a href="https://github.com/rtynbirf/domovoy"><img src="banner.png" width="100%" alt="domovoy — штандарт мастерской в каноне ORNAMENTAL MYTHO-REALISM"></a>
+
+</div>
+
+# КНИГА ДОМОВОГО
+
+<div align="center">
+  <img src="https://cdn.jsdelivr.net/gh/rtynbirf/domovoy@main/banner.png" width="100%" alt="Штандарт domovoy: обсидиан и расплавленное золото, кузня rtynbirf" />
+</div>
+
+
+
+
 
 
 
